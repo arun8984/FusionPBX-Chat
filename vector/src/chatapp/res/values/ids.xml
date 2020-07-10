@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="nested_scrollview" type="id"/>
+    <item name="invitations_section" type="id"/>
+    <item name="favourites_section" type="id"/>
+    <item name="direct_chats_section" type="id"/>
+    <item name="server_notices_section" type="id"/>
+    <item name="rooms_section" type="id"/>
+    <item name="low_priority_section" type="id"/>
+</resources>

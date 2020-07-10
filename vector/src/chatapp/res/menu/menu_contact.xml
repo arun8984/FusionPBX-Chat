@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_material_search_white"
+        android:title="Search Contacts"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+    <item android:id="@+id/action_sync_contacts"
+        android:title="Sync Contacts"
+        app:showAsAction="withText">
+
+    </item>
+    <item android:id="@+id/action_contact_type"
+        android:title="All Contacts"
+        app:showAsAction="withText">
+    </item>
+</menu>

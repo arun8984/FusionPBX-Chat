@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="63dp"
+    >
+    <!-- Use standard android.R class icon id instead of app specific id. This is just useful for
+         consistency. Use scaleType=centerCrop to give a nice full cropped image in the assigned
+         space -->
+    <ImageView
+        android:id="@android:id/icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="2dp"
+        android:focusable="false"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_contact_avatar"
+        android:layout_marginStart="2dp" />
+    <!-- Use standard android.R class text2 id instead of app specific id. This is just useful for
+         consistency. This is secondary text and not always visible so by default is has its
+         visibility set to gone -->
+    <TextView
+        android:id="@android:id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@android:id/icon"
+        android:layout_toRightOf="@android:id/icon"
+        android:ellipsize="marquee"
+        android:fontFamily="sans-serif"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone" />
+    <!-- Use standard android.R class text1 id instead of app specific id. This is just useful for
+         consistency. This view also sets layout_alignWithParentIfMissing=true which lets the view
+         align with the parent view if the text2 view is not part of the view hierarchy (which is
+         its initial state). -->
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_above="@android:id/text2"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_toEndOf="@android:id/icon"
+        android:layout_toRightOf="@android:id/icon"
+        android:ellipsize="marquee"
+        android:gravity="center_vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ImageView
+        android:id="@+id/imgIsLocal"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:focusable="false"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        app:srcCompat="@drawable/logo_transparent"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp" />
+</RelativeLayout>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+
+    <!-- Do not use drawableStart for icon size and for RTL -->
+    <ImageView
+        android:id="@+id/adapter_item_dialog_icon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical"
+        android:rotationY="@integer/rtl_mirror_flip"
+        android:tint="?attr/colorAccent"
+        tools:src="@drawable/video_call_green" />
+
+    <TextView
+        android:id="@+id/adapter_item_dialog_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textSize="20sp"
+        tools:text="@string/action_video_call" />
+
+</LinearLayout>

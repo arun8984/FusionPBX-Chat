@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.Light.AppBarOverlay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.Light.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
+
+        <ScrollView
+            android:id="@+id/page_scroll_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="100.0">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="120dp"
+                    android:layout_weight="60.0"
+                    android:gravity="start|center"
+                    android:orientation="horizontal"
+                    android:paddingLeft="18.0dp"
+                    android:paddingRight="18dp">
+
+                    <ImageView
+                        android:id="@+id/contact_image"
+                        android:layout_width="88dp"
+                        android:layout_height="88dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_contact_avatar" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="18dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/contact_name"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            android:text="Unknown"
+                            android:textSize="20sp" />
+
+                        <LinearLayout
+                            android:id="@+id/status_container"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5.0dip">
+
+                            <TextView
+                                android:id="@+id/status"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:maxLines="2"
+                                android:textColor="#ff4f5460"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="40.0">
+
+                    <RelativeLayout
+                        android:id="@+id/main_contact_info_layout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                        <ImageView
+                            android:id="@+id/divider_line_buttons_top"
+                            android:layout_width="fill_parent"
+                            android:layout_height="1.0px"
+                            android:layout_above="@+id/buttons_relative_layout"
+                            android:layout_marginLeft="@dimen/padding"
+                            android:layout_marginRight="@dimen/padding"
+                            android:background="#ffe8e9f0" />
+
+                        <RelativeLayout
+                            android:id="@+id/buttons_relative_layout"
+                            android:layout_width="fill_parent"
+                            android:layout_height="fill_parent"
+                            android:paddingLeft="@dimen/padding"
+                            android:paddingRight="@dimen/padding"
+                            android:visibility="visible">
+
+                            <include
+                                android:id="@+id/layout_buttons_short_only"
+                                layout="@layout/short_number_layout_buttons"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone" />
+
+                            <include
+                                android:id="@+id/layout_bottons_non_zangi"
+                                layout="@layout/contact_info_buttons_not_zangi"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone" />
+
+                            <include
+                                android:id="@+id/layout_buttons"
+                                layout="@layout/contact_info_buttons"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+
+                        <ImageView
+                            android:id="@+id/divider_line"
+                            android:layout_width="fill_parent"
+                            android:layout_height="1.0px"
+                            android:layout_below="@+id/buttons_relative_layout"
+                            android:layout_marginLeft="@dimen/padding"
+                            android:layout_marginTop="@dimen/padding"
+                            android:layout_marginRight="@dimen/padding"
+                            android:background="#ffe8e9f0" />
+
+                        <ListView
+                            android:id="@+id/contact_numbers_list_info"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/buttons_relative_layout"
+                            android:layout_marginLeft="@dimen/padding"
+                            android:layout_marginTop="24.0dip"
+                            android:layout_marginRight="@dimen/padding"
+                            android:layout_marginBottom="8dp"
+                            android:layout_weight="60.0"
+                            android:cacheColorHint="#ffeeeeee"
+                            android:divider="#ffe8e9f0"
+                            android:dividerHeight="1.0dp"
+                            android:fadingEdge="none"
+                            android:focusable="false"
+                            android:headerDividersEnabled="false"
+                            android:isScrollContainer="false"
+                            android:scrollbarStyle="outsideInset"
+                            android:scrollbars="none"
+                            android:smoothScrollbar="false"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/divider_line1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="1.0px"
+                            android:layout_below="@+id/contact_numbers_list_info"
+                            android:layout_marginLeft="@dimen/padding"
+                            android:layout_marginRight="@dimen/padding"
+                            android:background="#ffe8e9f0" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+
+        <RelativeLayout
+            android:id="@+id/progress_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#66cccccc"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/progressBar1"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="200.0dip"
+                android:layout_height="7.0dip"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:max="100" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

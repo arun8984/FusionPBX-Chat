@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "248631310313",
+    "firebase_url": "https://whizapp-c8b1e.firebaseio.com",
+    "project_id": "whizapp-c8b1e",
+    "storage_bucket": "whizapp-c8b1e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:248631310313:android:2668dacee125d20087bd78",
+        "android_client_info": {
+          "package_name": "com.whizzapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "248631310313-n3s9lie17jpn1kv48bo9birbe7o3i150.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK_sfyo-pomRiqaqAPgUMzuZQzJZlijDs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "248631310313-n3s9lie17jpn1kv48bo9birbe7o3i150.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

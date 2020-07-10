@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="im.vector"
+    android:installLocation="auto"
+    tools:ignore="LockedOrientationActivity">
+
+    <application>
+        <activity android:name="com.chatapp.FusionPBXLoginActivity"></activity>
+
+        <activity android:name="com.chatapp.ExtendedWebview" />
+        <activity android:name="com.chatapp.ProfileSetActivity" />
+        <activity android:name="com.chatapp.WalletActivity" />
+
+        <activity android:name="com.chatapp.ShowDeviceInMap" />
+        <activity android:name="com.chatapp.TrackDeviceList" />
+        <activity android:name="com.chatapp.SettingsWebActivity" />
+        <activity android:name="com.chatapp.TransferHistoryAcitivty" />
+        <activity
+            android:name="com.chatapp.ChatMainActivity"
+            android:label="@string/title_contact_details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chatapp.DialerActivity"
+            android:label="@string/title_dialer"
+            android:parentActivityName="com.chatapp.MainActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.chatapp.ChatMainActivity" />
+        </activity>
+        <activity
+            android:name="com.chatapp.InCallActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.chatapp.ContactsDetailsActivity"
+            android:label="@string/title_contact_details"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name="com.chatapp.RoomCreationActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.chatapp.FusionPBXRoomCreationActivity"
+            android:label=""
+            android:screenOrientation="portrait" />
+
+        <activity android:name="com.chatapp.VerifyOtpActivity" />
+        <activity android:name="com.chatapp.OtpRequestActivity" />
+        <activity android:name="com.chatapp.ChatLoginActivity">
+
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            -->
+        </activity>
+        <activity
+            android:name="com.chatapp.IntroActivity"
+            android:theme="@style/AppTheme.Intro" />
+        <activity
+            android:name="com.chatapp.SplashActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.Launcher" />
+
+        <meta-data
+            android:name="firebase_analytics_collection_deactivated"
+            android:value="true" />
+
+        <provider
+            android:name="com.chatapp.sip.service.PreferenceProvider"
+            android:authorities="${applicationId}.prefs"
+            android:permission="android.permission.CONFIGURE_SIP" />
+        <provider
+            android:name="com.chatapp.sip.db.DBProvider"
+            android:authorities="${applicationId}.db"
+            android:permission="android.permission.CONFIGURE_SIP"
+            android:process=":sipStack" />
+        <receiver android:name="com.chatapp.sip.service.HeadsetButtonReceiver" />
+        <receiver
+            android:name="com.chatapp.sip.plugins.codecs.ReceiverG729"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.chatapp.codecs.action.REGISTER_CODEC" />
+            </intent-filter>
+            <meta-data
+                android:name="init_factory"
+                android:value="pjmedia_codec_g729_init" />
+
+            <meta-data
+                android:name="lib_name"
+                android:value="libpj_g729_codec.so" />
+        </receiver>
+        <receiver
+            android:name="com.chatapp.sip.service.DeviceStateReceiver"
+            android:permission="android.permission.CONFIGURE_SIP"
+            android:process=":sipStack">
+
+            <!-- Here filter for protected-broadcasts -->
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.chatapp.sip.accounts.activate" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.chatapp.VideoChargeService"
+            android:exported="false" />
+
+        <service
+            android:name="com.chatapp.VideoMinuteService"
+            android:exported="false" />
+        <service
+            android:name="com.chatapp.TrailDisplayService"
+            android:exported="false" />
+
+        <service android:name=".push.fcm.VectorFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.chatapp.sip.service.SipService"
+            android:exported="false"
+            android:permission="android.permission.CONFIGURE_SIP"
+            android:process=":sipStack">
+            <intent-filter>
+                <action android:name="com.chatapp.sip.service.SipService" />
+                <action android:name="com.chatapp.sip.service.SipConfiguration" />
+            </intent-filter>
+        </service>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+    </application>
+
+</manifest>

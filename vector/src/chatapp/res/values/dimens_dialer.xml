@@ -1,0 +1,12 @@
+<resources>
+    <dimen name="dialpad_horizontal_margin">0dip</dimen>
+    <dimen name="dialpad_vertical_margin">2dip</dimen>
+
+    <dimen name="dialer_phoneno_layout_height">94dp</dimen>
+    <dimen name="dialer_phoneno_edittext_height">60dp</dimen>
+    <dimen name="dialer_phoneno_edittext_top_margin">15dp</dimen>
+    <dimen name="dialer_phoneno_text_size">30sp</dimen>
+    <dimen name="dialpad_height">350dp</dimen>
+    <dimen name="callbutton_height">90dp</dimen>
+    <dimen name="padding">16.0dip</dimen>
+</resources>

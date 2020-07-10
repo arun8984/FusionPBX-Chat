@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:icon="@drawable/ic_material_search_white"
+        android:title="Search Contacts"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_invite_members"
+        android:title="Start Chat"
+        app:showAsAction="always">@style/MyMenuTextAppearance
+    </item>
+</menu>

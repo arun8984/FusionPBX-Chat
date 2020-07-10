@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/txtDTMF"
+        style="@style/DialtactsDigitsTextAppearance"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:ems="10"
+        android:inputType="number"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:text="123456"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:focusable="true"
+        android:textIsSelectable="true"
+        android:windowSoftInputMode="stateAlwaysHidden"
+        tools:background="@color/white"
+        android:gravity="center_horizontal" />
+
+    <include
+        layout="@layout/dialpad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </include>
+</LinearLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:background="@drawable/list_item_or_button_click_riple_hover" android:clickable="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_marginLeft="@dimen/padding" android:layout_marginRight="@dimen/padding"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="60.0dip">
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@+id/ithem_make_zangi_call" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentLeft="true" android:layout_centerVertical="true"
+            android:layout_alignParentStart="true">
+            <LinearLayout android:orientation="horizontal" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <TextView android:textSize="16.0sp" android:textColor="#ff263238" android:id="@+id/contact_number" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="4dp" android:maxLines="1" />
+                <ImageView android:id="@+id/recent_is_favorite" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="5dp" android:src="@drawable/favorite_star"
+                    android:layout_marginStart="5dp" />
+            </LinearLayout>
+            <LinearLayout android:gravity="center_vertical" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp">
+                <TextView android:textSize="14.0sp" android:textColor="#ff828588" android:id="@+id/contact_number_label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="5dp" android:text="mobile"
+                    android:layout_marginEnd="5dp" />
+                <TextView android:textSize="12sp" android:textColor="@color/white" android:id="@+id/number_is_zangi" android:background="@drawable/zangi_number_icon_grey" android:paddingLeft="5dp" android:paddingRight="5dp" android:paddingBottom="1.5dp" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="77dp" android:text="@string/riot_app_name"
+                    android:layout_marginEnd="77dp" />
+                <TextView android:textSize="12sp" android:textColor="#ff828588" android:id="@+id/online_status" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Online" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:gravity="center" android:id="@+id/rates_info_activity" android:background="@drawable/list_item_or_button_click_riple_hover" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="48dp" android:layout_alignParentRight="true" android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true">
+            <TextView android:textSize="16sp" android:textColor="#ff263238" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="@dimen/padding" android:text="Rates"
+                android:layout_marginStart="@dimen/padding" />
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/recent_info_icon" />
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
