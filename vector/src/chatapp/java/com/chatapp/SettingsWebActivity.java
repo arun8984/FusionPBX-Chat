@@ -68,7 +68,7 @@ public class SettingsWebActivity extends AppCompatActivity {
         url = b.getString("Bundle");
         if (url.equalsIgnoreCase("Why")) {
             url = "http://www.whizzapp.net/";
-            setTitle("Why WhizzApp ?");
+            setTitle("Why Dial09 ?");
         } else if (url.equalsIgnoreCase("interswitchBuy")) {
             String userName = settings.getString("Username", "");
             String password = settings.getString("Password", "");

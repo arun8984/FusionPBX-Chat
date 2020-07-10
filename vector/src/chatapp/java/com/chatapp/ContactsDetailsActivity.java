@@ -113,7 +113,7 @@ public class ContactsDetailsActivity extends AppCompatActivity implements View.O
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + DefaultPhone));
-            intent.putExtra("sms_body", "Join me on WhizzApp, this free video chat and messaging app is amazing. I like it! www.whizzapp.net");
+            intent.putExtra("sms_body", "Join me on Dial09, this free video chat and messaging app is amazing. I like it! www.dial09.net");
             startActivity(intent);
 
         }

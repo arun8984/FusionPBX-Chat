@@ -701,10 +701,10 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
         findViewById(R.id.invite).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String shareBody = "Join me on WhizzApp, this free video chat and messaging app is amazing. I like it! www.whizzapp.com";
+                String shareBody = "Join me on Dial09, this free video chat and messaging app is amazing. I like it! www.dial09.com";
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "WhizzApp Invite");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "dial09 Invite");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Invite Using"));
             }
@@ -1264,10 +1264,10 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
     }
 
     public void invite() {
-        String shareBody = "Join me on WhizzApp, this free video chat and messaging app is amazing. I like it! http://play.google.com/store/apps/details?id=com.whizzapp\n";
+        String shareBody = "Join me on Dial09, this free video chat and messaging app is amazing. I like it! http://play.google.com/store/apps/details?id=com.dial09\n";
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "WhizzApp Invite");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Dial09 Invite");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
         startActivity(Intent.createChooser(sharingIntent, "Invite Using"));
     }

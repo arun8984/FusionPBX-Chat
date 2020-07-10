@@ -97,7 +97,7 @@ public class SplashActivity extends AppCompatActivity {
         txtTerms.setMovementMethod(LinkMovementMethod.getInstance());
         String text = "Agree to your <a href=\"https://whizzapp.net/privacy-policy.html\">Privacy</a> and <a href=\"https://whizzapp.net/privacy-policy.html\">Terms Conditions</a>";
         txtTerms.setText(Html.fromHtml(text));
-        txtTerms.setLinkTextColor(Color.parseColor("#FB8C00"));
+        txtTerms.setLinkTextColor(Color.parseColor("#38A7B6"));
         btnGetStarted = (Button)findViewById(R.id.loginSplashSubmit);
         progressBar = (ProgressBar)findViewById(R.id.progressBar2);
         btnGetStarted.setOnClickListener(new View.OnClickListener() {

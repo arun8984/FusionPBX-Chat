@@ -18,16 +18,16 @@
 
     <string name="prev_btn">Back</string>
     <string name="next_btn">Next</string>
-    <string name="getting_started_fifth_text">Experience the saturated colors and the 720p quality of WhizzApp video chat that will almost feel real.</string>
+    <string name="getting_started_fifth_text">Experience the saturated colors and the 720p quality of dial09 video chat that will almost feel real.</string>
     <string name="getting_started_fifth_title">Enjoy HD Video Calls</string>
     <string name="getting_started_first_text">Always stay connected even with 3G/4G/Wi-Fi internet.</string>
-    <string name="getting_started_first_title">WhizzApp Works Everywhere</string>
-    <string name="getting_started_fourth_text">Everything is encrypted, and unlike others, WhizzApp does not store your messages and contacts on the servers.</string>
+    <string name="getting_started_first_title">Dial09 Works Everywhere</string>
+    <string name="getting_started_fourth_text">Everything is encrypted, and unlike others, Dial09 does not store your messages and contacts on the servers.</string>
     <string name="getting_started_fourth_title">Your Privacy is Protected</string>
     <string name="getting_started_second_text">If bandwidth consumption is an issue, activate the mode to use in slow or expensive satellite networks.</string>
     <string name="getting_started_second_title">Low Data Usage</string>
     <string name="getting_started_third_text">Activate “Low Data Usage”, talk on voice call for up to 7 minutes while using only 1 MB of internet.</string>
-    <string name="getting_started_third_title">Save with WhizzApp</string>
+    <string name="getting_started_third_title">Save with dial09</string>
     <string name="learn_more_button">Learn more</string>
 
 </resources>

@@ -50,12 +50,13 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
     ArrayList<String> Domains;
     ArrayList<String> Domains_UUID;
     Integer SelectedDomainID;
-    EditText txtUsername,txtPassword;
+    EditText txtUsername, txtPassword;
     private ProgressDialog pDialog;
     private static final String LOG_TAG = FusionPBXLoginActivity.class.getSimpleName();
     private Parcelable mUniversalLinkUri;
     private final LoginHandler mLoginHandler = new LoginHandler();
     private HomeServerConnectionConfig mHomeserverConnectionConfig;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +68,8 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
         FcmHelper.ensureFcmTokenIsRetrieved(this);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        Boolean ShowWelcome = settings.getBoolean("ShowWelcome",true);
-        if(ShowWelcome){
+        Boolean ShowWelcome = settings.getBoolean("ShowWelcome", true);
+        if (ShowWelcome) {
             startActivity(new Intent(this, SplashActivity.class));
             finish();
         }
@@ -96,14 +97,14 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
             return;
         }
 
-        Domains=new ArrayList<>();
-        Domains_UUID= new ArrayList<>();
-        spinner=(Spinner)findViewById(R.id.spinner2);
+        Domains = new ArrayList<>();
+        Domains_UUID = new ArrayList<>();
+        spinner = (Spinner) findViewById(R.id.spinner2);
         pDialog = new ProgressDialog(FusionPBXLoginActivity.this, AlertDialog.THEME_HOLO_LIGHT);
         pDialog.setMessage("Please wait...");
         pDialog.setIndeterminate(false);
         pDialog.setCancelable(false);
-        pDialog.show();
+        showDialog();
         loadSpinnerData();
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -118,30 +119,37 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
                 // DO Nothing here
             }
         });
-        txtUsername = (EditText)findViewById(R.id.txtUsername);
-        txtPassword = (EditText)findViewById(R.id.txtPassword);
+        txtUsername = (EditText) findViewById(R.id.txtUsername);
+        txtPassword = (EditText) findViewById(R.id.txtPassword);
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SelectedDomainID!=null){
-                    if (!txtUsername.getText().toString().isEmpty()){
-                        if (!txtPassword.getText().toString().isEmpty()){
-                            Login(Domains.get(SelectedDomainID), Domains_UUID.get(SelectedDomainID),txtUsername.getText().toString(),txtPassword.getText().toString());
-                        }else {
+                if (SelectedDomainID != null) {
+                    if (!txtUsername.getText().toString().isEmpty()) {
+                        if (!txtPassword.getText().toString().isEmpty()) {
+                            Login(Domains.get(SelectedDomainID), Domains_UUID.get(SelectedDomainID), txtUsername.getText().toString(), txtPassword.getText().toString());
+                        } else {
                             txtPassword.setError("Password is required");
                         }
-                    }else {
+                    } else {
                         txtUsername.setError("Username is required");
                     }
 
-                }else {
-                    Toast.makeText(getApplicationContext(),"Select a domain.", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Select a domain.", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
-    private void Login(String Domain, String DomainUUID, String Username, String Password){
+    private void showDialog() {
+        try {
+            pDialog.show();
+        } catch (Exception e) {
+        }
+    }
+
+    private void Login(String Domain, String DomainUUID, String Username, String Password) {
         try {
             this.runOnUiThread(new Runnable() {
                 @Override
@@ -150,7 +158,7 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
                     pDialog.setMessage("Please wait...");
                     pDialog.setIndeterminate(false);
                     pDialog.setCancelable(false);
-                    pDialog.show();
+                    showDialog();
                 }
             });
             String url = String.format("%sextensions/extensions.php?key=%s&domain_uuid=%s&extension=%s&password=%s",
@@ -166,28 +174,28 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
                             FusionPBXLoginActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    String FusionPBX_HS_Url = String.format("%s%s",getString(R.string.FusionPBX_HS_Url),Domain);
+                                    String FusionPBX_HS_Url = String.format("%s%s", getString(R.string.FusionPBX_HS_Url), Domain);
                                     mHomeserverConnectionConfig = new HomeServerConnectionConfig.Builder()
                                             .withHomeServerUri(Uri.parse(FusionPBX_HS_Url))
                                             .withIdentityServerUri(Uri.parse(getString(R.string.default_identity_server_url)))
                                             .build();
                                     Matrix.getInstance(getApplicationContext()).getSessions();
-                                    login(mHomeserverConnectionConfig, getString(R.string.vector_im_server_url), getString(R.string.vector_im_server_url), Username, Username, "", Password,Domain,DomainUUID);
-                                    pDialog.dismiss();
+                                    login(mHomeserverConnectionConfig, getString(R.string.vector_im_server_url), getString(R.string.vector_im_server_url), Username, Username, "", Password, Domain, DomainUUID);
+                                    hideDialog();
                                 }
                             });
-                        }else {
+                        } else {
                             FusionPBXLoginActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    pDialog.dismiss();
+                                    hideDialog();
                                     Toast.makeText(FusionPBXLoginActivity.this, "Login Failed", Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        pDialog.dismiss();
+                        hideDialog();
                         Toast.makeText(FusionPBXLoginActivity.this, "An Internal error occured during verification, please try again later.", Toast.LENGTH_LONG).show();
                     }
                 }
@@ -195,7 +203,7 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
-                    pDialog.dismiss();
+                    hideDialog();
                     Toast.makeText(FusionPBXLoginActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
@@ -203,43 +211,43 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
             RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
             stringRequest.setRetryPolicy(policy);
             requestQueue.add(stringRequest);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            pDialog.dismiss();
+            hideDialog();
         }
     }
 
     private void loadSpinnerData() {
         String url = String.format("%sdomains/get.php?key=%s",
-                getResources().getString(R.string.FusionPBX_API_Url),getResources().getString(R.string.FusionPBX_API_Key));
-        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                getResources().getString(R.string.FusionPBX_API_Url), getResources().getString(R.string.FusionPBX_API_Key));
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try{
-                    JSONObject jsonObject=new JSONObject(response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
 
-                    JSONArray jsonArray=jsonObject.getJSONArray("domains");
-                    for(int i=0;i<jsonArray.length();i++){
-                        JSONObject jsonObject1=jsonArray.getJSONObject(i);
-                        String domain_name=jsonObject1.getString("domain_name");
-                        String domain_uuid=jsonObject1.getString("domain_uuid");
+                    JSONArray jsonArray = jsonObject.getJSONArray("domains");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+                        String domain_name = jsonObject1.getString("domain_name");
+                        String domain_uuid = jsonObject1.getString("domain_uuid");
                         Domains.add(domain_name);
                         Domains_UUID.add(domain_uuid);
                     }
 
                     spinner.setAdapter(new ArrayAdapter<String>(FusionPBXLoginActivity.this, android.R.layout.simple_spinner_dropdown_item, Domains));
-                    pDialog.dismiss();
-                }catch (JSONException e){
+                    hideDialog();
+                } catch (JSONException e) {
                     e.printStackTrace();
-                    pDialog.dismiss();
+                    hideDialog();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                pDialog.dismiss();
+                hideDialog();
             }
         });
         int socketTimeout = 30000;
@@ -247,6 +255,13 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
 
+    }
+
+    private void hideDialog() {
+        try {
+            pDialog.dismiss();
+        } catch (Exception e) {
+        }
     }
 
 
@@ -309,7 +324,7 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
                     editor.putString("Domain", domain);
                     editor.putString("DomainUUID", domain_uuid);
                     editor.commit();
-                    Settings.SIPServer = String.format("%s:%d",domain,Settings.SIPPort);
+                    Settings.SIPServer = String.format("%s:%d", domain, Settings.SIPPort);
                     Settings.SIPDomain = domain;
                     goToSplash();
                     FusionPBXLoginActivity.this.finish();
