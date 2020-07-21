@@ -69,8 +69,9 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
     private String Duration = "0";
     String currentDateandTime;
     private Long CallID;
-    ImageButton btnNumberPad, btnSpeaker, btnMute, btnHold, btnHangup, btnAnswer, btnHangup2;
+    ImageButton btnNumberPad, btnSpeaker, btnMute, btnHold, btnAnswer, btnHangup2;
     Timer timer;
+    ImageView btnHangup;
     TimerTask timerTask;
     final Handler handler = new Handler();
     private boolean isOutbound, hasAnswered, hasConnected;
@@ -208,7 +209,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
         btnSpeaker = (ImageButton) findViewById(R.id.btnSpeaker);
         btnMute = (ImageButton) findViewById(R.id.btnMute);
         //btnHold = (ImageButton) findViewById(R.id.btnHold);
-        btnHangup = (ImageButton) findViewById(R.id.btnHangup);
+        btnHangup = (ImageView) findViewById(R.id.btnHangup);
         btnAnswer = (ImageButton) findViewById(R.id.btnAnswer);
         btnHangup2 = (ImageButton) findViewById(R.id.btnHangup2);
 

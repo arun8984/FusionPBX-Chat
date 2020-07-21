@@ -20,16 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.Light.PopupOverlay" >
+            app:popupTheme="@style/AppTheme.Light.PopupOverlay">
+
             <ImageView
                 android:layout_width="wrap_content"
-                android:contentDescription="@string/riot_app_name"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:minWidth="120dp"
                 android:layout_margin="2dp"
+                android:contentDescription="@string/riot_app_name"
+                android:minWidth="60dp"
                 android:scaleType="fitXY"
-                android:src="@mipmap/ic_launcher_round"/>
+                android:src="@mipmap/ic_launcher_round" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -43,10 +44,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
 
+
+        <ImageButton
+            android:id="@+id/call_transfer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/Layout_Hangup"
+            app:layout_constraintTop_toTopOf="@id/Layout_Hangup"
+            android:layout_marginStart="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="null"/>
+
+        <ImageButton
+            android:id="@+id/call_merge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/Layout_Hangup"
+            app:layout_constraintTop_toTopOf="@id/Layout_Hangup"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/end_call"
+            android:layout_marginRight="40dp"
+            android:background="null"/>
+
         <LinearLayout
             android:id="@+id/Layout_Hangup"
-            android:layout_width="0dp"
-
+            android:layout_width="120dp"
             android:layout_height="70dp"
             android:layout_marginStart="1dp"
             android:layout_marginLeft="1dp"
@@ -61,13 +83,12 @@
             app:layout_constraintRight_toRightOf="parent">
 
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btnHangup"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
                 android:background="@color/white"
-                android:scaleType="centerInside"
                 android:src="@drawable/end_call" />
 
         </LinearLayout>
@@ -243,9 +264,9 @@
             layout="@layout/incalldialpad"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="50dp"
             android:layout_marginTop="0dp"
-            android:layout_marginRight="4dp"
+            android:layout_marginRight="50dp"
             android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toTopOf="@+id/Layout_Hangup"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -261,11 +282,11 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:scaleType="fitCenter"
+            android:src="@drawable/showdialpad"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.498"
-            android:src="@drawable/showdialpad"
 
             />
     </androidx.constraintlayout.widget.ConstraintLayout>

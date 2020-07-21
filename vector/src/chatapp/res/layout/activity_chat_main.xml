@@ -15,7 +15,7 @@
         android:layout_height="match_parent" />
 
     <com.google.android.material.navigation.NavigationView
-        android:id=" @+id/drawer_menu"
+        android:id="@+id/drawer_menu"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
@@ -136,6 +136,7 @@
                         android:id="@+id/dividerview100"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="gone"
                         android:layout_below="@id/settings"
                         android:background="@color/colorAccent" />
 
@@ -143,6 +144,7 @@
                         android:id="@+id/balance_view"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
+                        android:visibility="gone"
                         android:layout_below="@+id/dividerview100">
 
                         <ImageView
@@ -193,6 +195,7 @@
                         android:id="@+id/dividerview"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="gone"
                         android:layout_below="@id/balance_view"
                         android:background="@color/colorPrimary" />
 
@@ -307,6 +310,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:layout_below="@id/view8"
+                        android:visibility="gone"
                         android:background="@drawable/list_item_or_button_click_riple_hover"
                         android:orientation="horizontal">
 
@@ -347,6 +351,7 @@
                         android:id="@+id/dividerview1"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="gone"
                         android:layout_below="@id/credit_view"
                         android:background="@color/colorAccent" />
 
@@ -354,6 +359,7 @@
                         android:id="@+id/transfer_view"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
+                        android:visibility="gone"
                         android:layout_below="@id/dividerview1"
                         android:background="@drawable/list_item_or_button_click_riple_hover"
                         android:orientation="horizontal">
@@ -396,6 +402,7 @@
                         android:id="@+id/dividerview2"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="gone"
                         android:layout_below="@+id/transfer_view"
                         android:background="@color/colorAccent" />
 
@@ -406,6 +413,7 @@
                         android:layout_below="@+id/dividerview2"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentLeft="true"
+                        android:visibility="gone"
                         android:background="@drawable/list_item_or_button_click_riple_hover"
                         android:orientation="horizontal">
 
@@ -447,6 +455,7 @@
                         android:id="@+id/dividerview4"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="gone"
                         android:layout_below="@+id/transfer_history"
                         android:background="@color/colorAccent" />
 
@@ -457,6 +466,7 @@
                         android:layout_below="@+id/dividerview4"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentLeft="true"
+                        android:visibility="gone"
                         android:background="@drawable/list_item_or_button_click_riple_hover"
                         android:orientation="horizontal">
 
@@ -498,7 +508,7 @@
                         android:id="@+id/view5"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:layout_below="@+id/mobile_topup"
                         android:background="@color/colorAccent" />
 
@@ -778,6 +788,7 @@
                         android:layout_below="@+id/cccontainer"
                         android:layout_alignParentStart="true"
                         android:layout_alignParentLeft="true"
+                        android:visibility="gone"
                         android:background="@drawable/list_item_or_button_click_riple_hover"
                         android:orientation="horizontal">
 
@@ -819,6 +830,7 @@
                         android:id="@+id/view6"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:visibility="visible"
                         android:layout_below="@+id/voucher_recharge"
                         android:background="@color/colorAccent" />
 

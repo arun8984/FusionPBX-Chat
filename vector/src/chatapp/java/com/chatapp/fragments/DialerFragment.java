@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,7 +84,7 @@ public class DialerFragment extends Fragment implements View.OnClickListener {
         ImageButton btn0 = (ImageButton) vDialerFragment.findViewById(R.id.zero);
         ImageButton btnstar = (ImageButton) vDialerFragment.findViewById(R.id.star);
         ImageButton btnpound = (ImageButton) vDialerFragment.findViewById(R.id.pound);
-        ImageButton btnCall = (ImageButton) vDialerFragment.findViewById(R.id.btn_dialpad_call);
+        ImageView btnCall = (ImageView) vDialerFragment.findViewById(R.id.btn_dialpad_call);
         ImageButton btnDelete = (ImageButton) vDialerFragment.findViewById(R.id.btn_dialpad_delete);
         ImageButton btnContact = (ImageButton) vDialerFragment.findViewById(R.id.btn_dialpad_contact);
 
