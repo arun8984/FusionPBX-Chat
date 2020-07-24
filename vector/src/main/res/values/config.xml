@@ -38,8 +38,8 @@
     <!-- Note: pusher_http_url should have path '/_matrix/push/v1/notify' -->
     <string name="pusher_http_url" translatable="false"/>
     <!-- Note: pusher_app_id cannot exceed 64 chars -->
-    <string name="pusher_app_id" translatable="false">com.whizzapp</string>
-    <string name="chatDomain" translatable="false">200.126.66.54</string>
+    <string name="pusher_app_id" translatable="false">com.dial09</string>
+    <string name="chatDomain" translatable="false">breezemobiles.com</string>
 
 
 </resources>

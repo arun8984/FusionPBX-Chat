@@ -48,8 +48,8 @@ public class Settings {
     public static final String BALANCE_TRANSFER_HISTORY = "http://209.126.75.76/crm/jude_api/billing_balance_transfer_balance/balance_transfer_report.php";
     public static final String VOUCHER_RECHARGE = "http://209.126.75.76/crm/jude_api/billing_voucher_recharge/refill_dialer_voucher.php";
     public static final String ENC_KEY = "h5r@mg7$#ueqdstj";
-    public static final String DEFAULT_PUSHER_APP_ID = "com.whizzapp";
-    public static final String DEFAULT_PUSHER_URL = "http://209.126.75.76:5000/_matrix/push/v1/notify";
+    public static final String DEFAULT_PUSHER_APP_ID = "com.dial09";
+    public static final String DEFAULT_PUSHER_URL = "  ";
 
 
 

@@ -42,8 +42,8 @@
     <!-- Note: pusher_http_url should have path '/_matrix/push/v1/notify' -->
     <string name="pusher_http_url" translatable="false"/>
     <!-- Note: pusher_app_id cannot exceed 64 chars -->
-    <string name="pusher_app_id" translatable="false">com.whizzapp</string>
-    <string name="chatDomain" translatable="false">209.126.75.76</string>
+    <string name="pusher_app_id" translatable="false">com.dial09</string>
+    <string name="chatDomain" translatable="false">breezemobiles.com</string>
 
     <string name="FusionPBX_API_Url" translatable="false">http://208.70.254.6:2581/restapi/</string>
     <string name="FusionPBX_API_Key" translatable="false">7U4XLy3I60ufbdFRsj62ayJ6BQsSoBhU</string>

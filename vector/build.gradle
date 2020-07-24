@@ -128,7 +128,7 @@ android {
     productFlavors {
 
         chatapp {
-            applicationId "com.whizzapp"
+            applicationId "com.dial09"
             // use the version name
             versionCode 90004
             versionName "1.1.2"
