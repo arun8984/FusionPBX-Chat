@@ -31,22 +31,22 @@
 
             <ImageView
                 android:id="@+id/room_chat_link"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="14"
                 android:src="@drawable/ic_material_message_grey" />
 
             <ImageView
                 android:id="@+id/call_speaker_view"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="14"
                 android:src="@drawable/ic_material_speaker_phone_grey" />
 
             <ImageView
                 android:id="@+id/call_switch_camera_view"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="14"
                 android:src="@drawable/ic_material_switch_video_grey"
                 android:visibility="invisible" />
@@ -56,32 +56,33 @@
             when the call is being setup and the called device has not yet reached -->
             <ImageView
                 android:id="@+id/hang_up_button"
-                android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_width="50dp"
+                android:layout_height="56dp"
                 android:layout_weight="16"
+                android:scaleType="centerCrop"
                 android:src="@drawable/voice_call_end_fushia" />
 
             <!-- for further use: for now we cannot switch from audio to video -->
             <ImageView
                 android:id="@+id/start_video_call"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="14"
                 android:src="@drawable/ic_material_videocam_grey"
                 android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/mute_local_camera"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="14"
                 android:src="@drawable/ic_material_videocam_off_grey"
                 android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/mute_audio"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
+                android:layout_width="30dp"
+                android:layout_height="40dp"
                 android:layout_weight="14"
                 android:src="@drawable/ic_material_mic_off_grey" />
         </LinearLayout>
