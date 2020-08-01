@@ -448,11 +448,16 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         // release the static instance if it is the current implementation
         if (sharedInstance == this) {
             sharedInstance = null;
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
     }
 
     @Override
@@ -1371,6 +1376,11 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
             VectorUtils.loadUserAvatar(this, mSession, profileImge, mSession.getMyUser());
             txtDisplayName.setText(mSession.getMyUser().displayname);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
 }

@@ -18,16 +18,38 @@ package com.chatapp;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.preference.PreferenceManager;
+import androidx.work.BackoffPolicy;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.Operation;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkContinuation;
+import androidx.work.WorkInfo;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +61,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.common.util.concurrent.ListenableFuture;
 
 import org.jetbrains.annotations.NotNull;
 import org.matrix.androidsdk.MXSession;
@@ -54,7 +78,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
+import br.com.goncalves.pugnotification.notification.PugNotification;
 import im.vector.ErrorListener;
 import im.vector.Matrix;
 import im.vector.R;
@@ -98,8 +125,8 @@ public class SplashActivity extends AppCompatActivity {
         String text = "Agree to your <a href=\"https://whizzapp.net/privacy-policy.html\">Privacy</a> and <a href=\"https://whizzapp.net/privacy-policy.html\">Terms Conditions</a>";
         txtTerms.setText(Html.fromHtml(text));
         txtTerms.setLinkTextColor(Color.parseColor("#38A7B6"));
-        btnGetStarted = (Button)findViewById(R.id.loginSplashSubmit);
-        progressBar = (ProgressBar)findViewById(R.id.progressBar2);
+        btnGetStarted = (Button) findViewById(R.id.loginSplashSubmit);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar2);
         btnGetStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,11 +147,11 @@ public class SplashActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         List<MXSession> sessions = Matrix.getInstance(getApplicationContext()).getSessions();
-        if (sessions.size()==0) {
+        if (sessions.size() == 0) {
             progressBar.setVisibility(View.GONE);
             txtTerms.setVisibility(View.VISIBLE);
             btnGetStarted.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             progressBar.setVisibility(View.VISIBLE);
             txtTerms.setVisibility(View.GONE);
             btnGetStarted.setVisibility(View.GONE);
@@ -371,6 +398,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        NoitficationUtils.showNotification(this);
 
         Collection<MXSession> sessions = mDoneListeners.keySet();
 
@@ -380,5 +408,95 @@ public class SplashActivity extends AppCompatActivity {
                 session.setFailureCallback(null);
             }
         }
+    }
+
+    private void showOnGoingNotification() {
+        notif();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        int notificationId = 1;
+        String channelId = "channel-01";
+        String channelName = "Channel Name";
+        int importance = NotificationManager.IMPORTANCE_HIGH;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel mChannel = new NotificationChannel(
+                    channelId, channelName, importance);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.app_name))
+                .setOngoing(true)
+                .setAutoCancel(false)
+                .setContentText(getString(R.string.app_name));
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(new Intent(this, SplashActivity.class));
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT
+        );
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        notificationManager.notify(notificationId, mBuilder.build());
+
+    }
+
+    private void notif() {
+        Intent intent = new Intent(this, SplashActivity.class);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                1012, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Notification.Builder builder = new Notification.Builder(this)
+                .setContentTitle("Notification Title")
+                .setContentText("Sample Notification Content")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.data_bill)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.data_bill));
+        Notification n;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            n = builder.build();
+        } else {
+            n = builder.getNotification();
+        }
+
+        n.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(1012, n);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(new Intent(this, NotifService.class));
+        NoitficationUtils.showNotification(this);
+        PeriodicWorkRequest periodicSyncDataWork =
+                new PeriodicWorkRequest.Builder(NotificationWorker.class, 60, TimeUnit.SECONDS)
+                        .addTag(getString(R.string.app_name))
+                        .build();
+        WorkManager.getInstance().enqueueUniquePeriodicWork(
+                getString(R.string.app_name),
+                ExistingPeriodicWorkPolicy.KEEP, //Existing Periodic Work policy
+                periodicSyncDataWork //work request
+        );
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        startService(new Intent(this, NotifService.class));
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        startService(new Intent(this, NotifService.class));
+
     }
 }
