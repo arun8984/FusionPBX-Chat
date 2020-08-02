@@ -1,5 +1,8 @@
 package com.chatapp
 
+import android.content.Context
+import im.vector.Matrix
+
 class C {
     companion object {
         var WALLET_BALANCE = "Wallet Balance"
@@ -18,6 +21,17 @@ class C {
         var TC = "Why This App ?"
         var VR = " Voucher Recharge"
         var LOGOUT = "Logout"
-
+        fun hasCorruptedStore(contxt: Context): Boolean {
+            var hasCorruptedStore = false
+            val sessions = Matrix.getMXSessions(contxt)
+            for (session in sessions) {
+                if (session.isAlive) {
+                    hasCorruptedStore = hasCorruptedStore or session.dataHandler.store!!.isCorrupted
+                }
+            }
+            return hasCorruptedStore
+        }
     }
+
+
 }

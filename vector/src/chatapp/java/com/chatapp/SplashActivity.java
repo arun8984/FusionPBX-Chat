@@ -473,8 +473,17 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        showNotification();
+        if(Matrix.getInstance(this).getDefaultSession()==null){
+            NoitficationUtils.cancelNotification(this);
+            NoitficationUtils.cancelNotification(this);
+            NoitficationUtils.cancelNotification(this);
+        }
+    }
+
+    private void showNotification() {
         startService(new Intent(this, NotifService.class));
-        NoitficationUtils.showNotification(this);
         PeriodicWorkRequest periodicSyncDataWork =
                 new PeriodicWorkRequest.Builder(NotificationWorker.class, 60, TimeUnit.SECONDS)
                         .addTag(getString(R.string.app_name))

@@ -190,7 +190,7 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
 
         navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                 R.id.navigation_chat, R.id.navigation_dialer, R.id.navigation_recent, R.id.navigation_contacts)
+                R.id.navigation_chat, R.id.navigation_dialer, R.id.navigation_recent, R.id.navigation_contacts)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 
@@ -248,7 +248,7 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
 //        Intent i = new Intent(this, VideoMinuteService.class);
 //        startService(i);
 //        startCallUpdate();
-        if(mVectorPendingCallView.getVisibility()==View.VISIBLE){
+        if (mVectorPendingCallView.getVisibility() == View.VISIBLE) {
             showDialer();
         }
     }
@@ -1257,6 +1257,7 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
             public void onClick(DialogInterface dialog, int whichButton) {
 
                 CommonActivityUtils.logout(ChatMainActivity.this, true);
+                NoitficationUtils.cancelNotification(ChatMainActivity.this);
             }
         });
         dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
