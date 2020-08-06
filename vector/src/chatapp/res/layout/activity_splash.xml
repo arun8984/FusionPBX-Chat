@@ -8,14 +8,13 @@
 
     <ImageView
         android:id="@+id/loginSplashLogo"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:src="@drawable/splash"
         android:transitionName="loginLogoTransition"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="fitCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

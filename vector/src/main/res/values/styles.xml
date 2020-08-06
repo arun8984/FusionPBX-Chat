@@ -5,7 +5,7 @@
 
     <!-- Launcher Theme, only used for VectorLauncherActivity (will be use even before the Activity is started) -->
     <style name="AppTheme.Launcher" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/welcome_screen</item>
+        <item name="android:windowBackground">@drawable/welcome</item>
 
         <item name="colorPrimaryDark">@color/primary_color_dark</item>
     </style>
