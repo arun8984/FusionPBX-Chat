@@ -16,7 +16,7 @@ import android.webkit.WebViewClient;
 
 import im.vector.R;
 
-public class ExtendedWebview extends AppCompatActivity implements AdvanceWebView.Listener{
+public class ExtendedWebview extends AppCompatActivity implements AdvanceWebView.Listener {
 
     private String url = "";
 
@@ -81,8 +81,8 @@ public class ExtendedWebview extends AppCompatActivity implements AdvanceWebView
         Bundle b = getIntent().getExtras();
         url = b.getString("Bundle");
         if (url.equalsIgnoreCase("Why")) {
-            url = "http://www.breezemobiles.com";
-            setTitle("Why Dial09 ?");
+            url = "https://telinq.com/";
+            setTitle("Why " + getString(R.string.app_name) + " ?");
         } else if (url.equalsIgnoreCase("interswitchBuy")) {
             String userName = settings.getString("Username", "");
             String password = settings.getString("Password", "");

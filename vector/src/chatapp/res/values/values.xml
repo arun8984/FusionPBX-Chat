@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Dial09</string>
+    <string name="app_name">Linq</string>
     <string name="title_appcontact">%1$s Contacts</string>
     <string name="title_voip_call_out">App CallOut</string>
     <string name="title_app_call">Call</string>

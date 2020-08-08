@@ -113,7 +113,7 @@ public class ContactsDetailsActivity extends AppCompatActivity implements View.O
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + DefaultPhone));
-            intent.putExtra("sms_body", "Join me on Dial09, this free video chat and messaging app is amazing. I like it! www.dial09.net");
+            intent.putExtra("sms_body", "Join me on "+getString(R.string.app_name)+", this free video chat and messaging app is amazing. I like it! https://telinq.com/");
             startActivity(intent);
 
         }
@@ -221,6 +221,7 @@ public class ContactsDetailsActivity extends AppCompatActivity implements View.O
 
             LinearLayout invitesms_layout = (LinearLayout) findViewById(R.id.invite_long_button);
             invitesms_layout.setOnClickListener(InviteSMSListener);
+            invitesms_layout.setVisibility(View.GONE);
 
         }
 

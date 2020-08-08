@@ -49,7 +49,7 @@ public class Settings {
     public static final String VOUCHER_RECHARGE = "http://209.126.75.76/crm/jude_api/billing_voucher_recharge/refill_dialer_voucher.php";
     public static final String ENC_KEY = "h5r@mg7$#ueqdstj";
     public static final String DEFAULT_PUSHER_APP_ID = "com.dial09";
-    public static final String DEFAULT_PUSHER_URL = "  ";
+    public static final String DEFAULT_PUSHER_URL = "http://67.227.23.249:5000/_matrix/push/v1/notify";
 
 
 

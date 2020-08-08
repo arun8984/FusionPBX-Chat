@@ -237,6 +237,10 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
                     }
 
                     spinner.setAdapter(new ArrayAdapter<String>(FusionPBXLoginActivity.this, android.R.layout.simple_spinner_dropdown_item, Domains));
+                    try {
+                        spinner.setSelection(1);
+                    } catch (Exception e) {
+                    }
                     hideDialog();
                 } catch (JSONException e) {
                     e.printStackTrace();
