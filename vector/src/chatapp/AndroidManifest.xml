@@ -41,7 +41,20 @@
         <activity
             android:name="com.chatapp.InCallActivity"
             android:label=""
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:process=":sipStack"
+            android:taskAffinity=""
+            android:permission="android.permission.CONFIGURE_SIP">
+            <intent-filter android:priority="10" >
+                <action android:name="com.csipsimple.phone.action.INCALL" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            </activity>
         <activity
             android:name="com.chatapp.ContactsDetailsActivity"
             android:label="@string/title_contact_details"
