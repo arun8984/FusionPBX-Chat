@@ -291,7 +291,8 @@ public class DialerFragment extends Fragment implements View.OnClickListener {
                 if (PhoneNo.length()==0){
                     RecentDBHandler recentDBHandler = new RecentDBHandler(getContext());
                     txtDialNumber.setText(recentDBHandler.LastCalledNo());
-                }else if (PhoneNo.length() > 7) {
+//                }else if (PhoneNo.length() > 7) {
+                }else if (true) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                         requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_MICROPHONE);
                     } else {
@@ -310,9 +311,10 @@ public class DialerFragment extends Fragment implements View.OnClickListener {
     }
     private void OnCallButtonClick() {
 
-        if (accountStatusDisplay.availableForCalls) {
+//        if (accountStatusDisplay.availableForCalls) {
+        if (true) {
             final String PhoneNo = txtDialNumber.getText().toString().replace("+","");
-            if (PhoneNo.length() > 7) {
+//            if (PhoneNo.length() > 7) {
 
                 Intent i = new Intent(getContext(), InCallActivity.class);
                 i.putExtra("CallType", "Outbound");
@@ -320,10 +322,10 @@ public class DialerFragment extends Fragment implements View.OnClickListener {
                 startActivity(i);
 
                 txtDialNumber.setText("");
-            } else {
-                Toast.makeText(getContext() , "Please check the phone number",
-                        Toast.LENGTH_LONG).show();
-            }
+//            } else {
+//                Toast.makeText(getContext() , "Please check the phone number",
+//                        Toast.LENGTH_LONG).show();
+//            }
         }else {
             Toast.makeText(getContext(), "App Not registered. Check your internet connection and restart the app.",
                     Toast.LENGTH_LONG).show();
