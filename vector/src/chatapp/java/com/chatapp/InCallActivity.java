@@ -173,8 +173,8 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 am.requestAudioFocus(null, am.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN);
                 isOutbound = true;
             } else {
-                am.setMode(AudioManager.MODE_RINGTONE);
-                r.play();
+                //am.setMode(AudioManager.MODE_RINGTONE);
+                //r.play();
                 CurrentCallID = extras.getInt("CallID");
                 isOutbound = false;
             }

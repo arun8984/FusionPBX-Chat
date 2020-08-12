@@ -215,6 +215,9 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
         navGraph.addArgument("VectorRecentsListFragment.ARG_LAYOUT_ID", new NavArgument.Builder().setDefaultValue(R.layout.fragment_vector_recents_list).build());
         navController.setGraph(navGraph);
 
+        Settings.SIPDomain = sharedPreferences.getString("Domain","");
+        Settings.SIPServer = String.format("%s:%d", Settings.SIPDomain, Settings.SIPPort);
+
         setWizardId();
         startSipService();
         long accountId = 1;
