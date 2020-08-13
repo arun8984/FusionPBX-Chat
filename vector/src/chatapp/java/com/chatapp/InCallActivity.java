@@ -40,10 +40,14 @@ import android.widget.TextView;
 
 import com.chatapp.sip.api.ISipService;
 import com.chatapp.sip.api.SipCallSession;
+import com.chatapp.sip.api.SipManager;
 import com.chatapp.sip.api.SipProfile;
+import com.chatapp.sip.api.SipUri;
+import com.chatapp.sip.models.CallerInfo;
 import com.chatapp.sip.service.SipService;
 import com.chatapp.sip.utils.CallHandlerPlugin;
 import com.chatapp.sip.utils.Compatibility;
+import com.chatapp.sip.utils.Log;
 import com.chatapp.util.RecentDBHandler;
 
 
@@ -87,15 +91,14 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
     ToneGenerator dtmfGenerator = new ToneGenerator(0, ToneGenerator.MAX_VOLUME);
     ImageView imgContact;
     int flags = 0x00000020;
-    private int CurrentCallID;
     private ISipService service;
     private ServiceConnection connection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName arg0, IBinder arg1) {
             service = ISipService.Stub.asInterface(arg1);
-            if (isOutbound)
-                OutboundCall(PhoneNo);
+            //if (isOutbound)
+            //    OutboundCall(PhoneNo);
             /*
              * timings.addSplit("Service connected"); if(configurationService !=
              * null) { timings.dumpToLog(); }
@@ -166,8 +169,10 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
         hasConnected = false;
 
         Bundle extras = getIntent().getExtras();
+        call = getIntent().getParcelableExtra(SipManager.EXTRA_CALL_INFO);
         if (extras != null) {
             PhoneNo = extras.getString("PhoneNo");
+            PhoneNo = formatRemoteContactString(PhoneNo);
             if (extras.getString("CallType").equals("Outbound")) {
                 am.setMode(AudioManager.MODE_IN_COMMUNICATION);
                 am.requestAudioFocus(null, am.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN);
@@ -175,7 +180,6 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             } else {
                 //am.setMode(AudioManager.MODE_RINGTONE);
                 //r.play();
-                CurrentCallID = extras.getInt("CallID");
                 isOutbound = false;
             }
         }
@@ -293,7 +297,6 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             btnDialPad.setVisibility(View.INVISIBLE);
         }
 
-
         timer = new Timer();
         initializeTimerTask();
         timer.schedule(timerTask, 1000, 1000);
@@ -408,7 +411,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
         final String to = "sip:" + ToPhone + "@" + Settings.SIPDomain;
 
         try {
-            service.makeCall(to, 1);
+            service.makeCall(ToPhone, 1);
             lblStatus.setText("Dialing");
         } catch (Exception e) {
             e.printStackTrace();
@@ -452,7 +455,6 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
                             LinearLayout layoutAnswer = (LinearLayout) findViewById(R.id.Layout_Answer);
                             LinearLayout layoutControls = (LinearLayout) findViewById(R.id.Layout_Controls);
                             LinearLayout layoutHangup = (LinearLayout) findViewById(R.id.Layout_Hangup);
@@ -677,6 +679,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
     */
     private void DisconnectCall() {
         try {
+            /*
             try {
                 SipCallSession[] calls = service.getCalls();
                 call = calls[calls.length - 1];
@@ -684,6 +687,8 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             } catch (Exception e) {
                 e.printStackTrace();
             }
+             */
+            service.hangup(call.getCallId(), SipCallSession.StatusCode.OK);
             this.unbindService(connection);
             RecentDBHandler recentDBHandler = new RecentDBHandler(this);
             recentDBHandler.SetDuration(CallID, Duration);
@@ -720,14 +725,14 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 handler.post(new Runnable() {
                     public void run() {
                         try {
-                            if (service.getCalls().length >= 1) {
-                                SipCallSession[] calls = service.getCalls();
-                                call = calls[calls.length - 1];
-                                if (call.getCallState() == SipCallSession.InvState.DISCONNECTED) {
+                            /*if (service.getCalls().length >= 1) {*/
+                                //SipCallSession[] calls = service.getCalls();
+                                call = service.getCallInfo(call.getCallId());
+
+                                if (call.getCallState() == SipCallSession.InvState.DISCONNECTED || call.getCallState() == SipCallSession.InvState.NULL) {
                                     DisconnectCall();
                                 }
                                 if (call.getCallState() == SipCallSession.InvState.CONFIRMED) {
-
                                     if (hasConnected) {
                                         Date now = new Date();
                                         long diffInMs = now.getTime() - ConnectedDate.getTime();
@@ -748,9 +753,9 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                                 if (call.getCallState() == SipCallSession.InvState.CALLING) {
                                     lblStatus.setText("Dialing");
                                 }
-                            } else {
+                            /*} else {
                                 DisconnectCall();
-                            }
+                            }*/
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -815,6 +820,16 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         return contact;
+    }
+
+    private String formatRemoteContactString(String remoteContact) {
+        String formattedRemoteContact;
+
+        SipUri.ParsedSipContactInfos uriInfos = SipUri.parseSipContact(remoteContact);
+        String phoneNumber = SipUri.getPhoneNumber(uriInfos);
+        formattedRemoteContact = phoneNumber;
+
+        return formattedRemoteContact;
     }
 
 

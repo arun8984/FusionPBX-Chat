@@ -733,7 +733,7 @@ public class UAStateReceiver extends Callback {
 
                     switch (callState) {
                         case SipCallSession.InvState.INCOMING:
-                        /*case SipCallSession.InvState.CALLING:*/
+                        case SipCallSession.InvState.CALLING:
                             stateReceiver.notificationManager.showNotificationForCall(callInfo);
                             stateReceiver.launchCallHandler(callInfo);
                             stateReceiver.broadCastAndroidCallState("RINGING",

@@ -46,7 +46,6 @@
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTask"
-            android:process=":sipStack"
             android:taskAffinity=""
             android:permission="android.permission.CONFIGURE_SIP">
             <intent-filter android:priority="10" >

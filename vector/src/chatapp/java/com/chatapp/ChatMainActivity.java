@@ -24,6 +24,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
@@ -33,6 +34,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.ResultReceiver;
 import android.provider.ContactsContract;
 import android.text.InputType;
@@ -65,6 +67,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.chatapp.sip.api.ISipService;
 import com.chatapp.sip.api.SipManager;
 import com.chatapp.sip.api.SipProfile;
 import com.chatapp.sip.db.DBProvider;
@@ -137,6 +140,24 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
     ProgressBar progressBar;
     NavigationView navigationView;
     private ProgressBar balancePg;
+
+    private ISipService service;
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName arg0, IBinder arg1) {
+            service = ISipService.Stub.asInterface(arg1);
+            /*
+             * timings.addSplit("Service connected"); if(configurationService !=
+             * null) { timings.dumpToLog(); }
+             */
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            service = null;
+        }
+    };
 
     @Override
     public int getLayoutRes() {
@@ -223,6 +244,7 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
         long accountId = 1;
         account = SipProfile.getProfileFromDbId(this, accountId, DBProvider.ACCOUNT_FULL_PROJECTION);
         saveAccount(wizardId);
+        bindService(new Intent(this, SipService.class), connection, Context.BIND_AUTO_CREATE);
 
         View header = navigationView.getHeaderView(0);
 
@@ -455,6 +477,7 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
         if (sharedInstance == this) {
             sharedInstance = null;
         }
+        this.unbindService(connection);
     }
 
     @Override
@@ -582,6 +605,9 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
             Intent intent = new Intent(SipManager.ACTION_SIP_REQUEST_RESTART);
             sendBroadcast(intent);
         }
+    }
+    public ISipService getConnectedService() {
+        return service;
     }
 
     private void GetBalance() {

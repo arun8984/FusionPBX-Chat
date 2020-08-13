@@ -2039,7 +2039,7 @@ public class SipService extends Service {
         intent.putExtra(SipManager.EXTRA_CALL_INFO, toSendInfo);
         intent.setPackage(UI_CALL_PACKAGE);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("PhoneNo",String.valueOf(toSendInfo.getCallId()));
+        intent.putExtra("PhoneNo",String.valueOf(toSendInfo.getRemoteContact()));
         if (toSendInfo.isIncoming()){
         	intent.putExtra("CallType","Incoming");
 			intent.putExtra("CallID",  toSendInfo.getCallId());

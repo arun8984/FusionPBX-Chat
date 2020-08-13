@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.chatapp.ChatMainActivity;
 import com.chatapp.InCallActivity;
+import com.chatapp.sip.api.ISipService;
 import com.chatapp.sip.utils.AccountListUtils;
 import com.chatapp.util.RecentDBHandler;
 
@@ -316,11 +317,21 @@ public class DialerFragment extends Fragment implements View.OnClickListener {
             final String PhoneNo = txtDialNumber.getText().toString().replace("+","");
 //            if (PhoneNo.length() > 7) {
 
+            try {
+                ChatMainActivity superActivity = ((ChatMainActivity)getActivity());
+
+                ISipService service = superActivity.getConnectedService();
+                service.makeCall(PhoneNo, 1);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+/*
                 Intent i = new Intent(getContext(), InCallActivity.class);
                 i.putExtra("CallType", "Outbound");
                 i.putExtra("PhoneNo", PhoneNo);
                 startActivity(i);
-
+*/
                 txtDialNumber.setText("");
 //            } else {
 //                Toast.makeText(getContext() , "Please check the phone number",
