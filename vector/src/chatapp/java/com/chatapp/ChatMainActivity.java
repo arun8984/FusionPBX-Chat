@@ -477,7 +477,11 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
         if (sharedInstance == this) {
             sharedInstance = null;
         }
-        this.unbindService(connection);
+        try {
+            this.unbindService(connection);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

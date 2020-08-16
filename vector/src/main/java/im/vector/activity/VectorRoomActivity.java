@@ -3516,7 +3516,7 @@ public class VectorRoomActivity extends MXCActionBarActivity implements
 
                         showWaitingView();
 
-                        room.joinWithThirdPartySigned(sRoomPreviewData.getRoomIdOrAlias(), signUrl, new ApiCallback<Void>() {
+                        room.joinWithThirdPartySigned(mSession,sRoomPreviewData.getRoomIdOrAlias(), signUrl, new ApiCallback<Void>() {
                             @Override
                             public void onSuccess(Void info) {
                                 onJoined();
