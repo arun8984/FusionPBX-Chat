@@ -20,11 +20,15 @@
 package im.vector.push.fcm
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.text.TextUtils
+import com.chatapp.ChatMainActivity
+import com.chatapp.Settings
+import com.chatapp.SplashActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.JsonParser
@@ -32,12 +36,14 @@ import im.vector.BuildConfig
 import im.vector.Matrix
 import im.vector.R
 import im.vector.VectorApp
+import im.vector.activity.VectorLauncherActivity
 import im.vector.notifications.NotifiableEventResolver
 import im.vector.notifications.NotifiableMessageEvent
 import im.vector.notifications.SimpleNotifiableEvent
 import im.vector.push.PushManager
 import im.vector.services.EventStreamServiceX
 import im.vector.ui.badge.BadgeProxy
+import org.json.JSONObject
 import org.matrix.androidsdk.MXSession
 import org.matrix.androidsdk.core.Log
 import org.matrix.androidsdk.rest.model.Event
@@ -84,9 +90,29 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
             Log.i(LOG_TAG, "## onMessageReceived() : the notifications are disabled")
             return
         }
+        var processed = false
+
+        if (message.data.isNotEmpty()) {
+            try {
+
+                val MsgType = message.data["MsgType"].toString();
+
+                if (MsgType == "INCOMINALERT") {
+                    val mainactiviy = Intent(baseContext, SplashActivity::class.java)
+                    mainactiviy.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    mainactiviy.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    Settings.PushMsgID = message.getMessageId().toString();
+                    startActivity(mainactiviy)
+                    processed = true;
+                }
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace();
+            }
+        }
 
         //TODO if the app is in foreground, we could just ignore this. The sync loop is already going?
-        mUIHandler.post { onMessageReceivedInternal(message.data, pushManager) }
+        if(!processed)
+            mUIHandler.post { onMessageReceivedInternal(message.data, pushManager) }
     }
 
     /**
@@ -280,4 +306,5 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
     companion object {
         private val LOG_TAG = VectorFirebaseMessagingService::class.java.simpleName
     }
+
 }

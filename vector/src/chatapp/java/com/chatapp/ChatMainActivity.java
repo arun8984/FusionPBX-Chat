@@ -61,9 +61,11 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.preference.PreferenceManager;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -106,6 +108,8 @@ import im.vector.activity.VectorAppCompatActivity;
 import im.vector.activity.VectorCallViewActivity;
 import im.vector.activity.VectorSettingsActivity;
 import im.vector.push.PushManager;
+import im.vector.push.fcm.FcmHelper;
+import im.vector.push.fcm.VectorFirebaseMessagingService;
 import im.vector.util.CallsManager;
 import im.vector.util.PermissionsToolsKt;
 import im.vector.util.PreferencesManager;
@@ -238,6 +242,9 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
 
         Settings.SIPDomain = sharedPreferences.getString("Domain","");
         Settings.SIPServer = String.format("%s:%d", Settings.SIPDomain, Settings.SIPPort);
+        SipUsername = sharedPreferences.getString("Username", "");
+        SipPassword = sharedPreferences.getString("Password", "");
+        Username = SipUsername;
 
         setWizardId();
         startSipService();
@@ -275,6 +282,32 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
 //        startCallUpdate();
         if (mVectorPendingCallView.getVisibility() == View.VISIBLE) {
             showDialer();
+        }
+        if(!Settings.PushMsgID.equals("")){
+            try {
+                String token = FcmHelper.getFcmToken(this);
+                String url = String.format("%sextensions/ackpush.php?key=%s&msgid=%s",
+                        context.getResources().getString(R.string.FusionPBX_API_Url), context.getResources().getString(R.string.FusionPBX_API_Key),
+                        Settings.PushMsgID);
+                RequestQueue requestQueue = Volley.newRequestQueue(context);
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        volleyError.printStackTrace();
+                    }
+                });
+                int socketTimeout = 30000;
+                RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                stringRequest.setRetryPolicy(policy);
+                requestQueue.add(stringRequest);
+                Settings.PushMsgID="";
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -537,6 +570,29 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
             }
         };
         t.start();
+        try {
+            String token = FcmHelper.getFcmToken(this);
+            String url = String.format("%sextensions/updatetoken.php?key=%s&domain_uuid=%s&extension=%s&os=android&token=%s",
+                    context.getResources().getString(R.string.FusionPBX_API_Url), context.getResources().getString(R.string.FusionPBX_API_Key),
+                    Settings.SIPDomain, ChatMainActivity.SipUsername, token);
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String s) {
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    volleyError.printStackTrace();
+                }
+            });
+            int socketTimeout = 30000;
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            stringRequest.setRetryPolicy(policy);
+            requestQueue.add(stringRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private boolean setWizardId() {

@@ -50,6 +50,7 @@ public class Settings {
     public static final String ENC_KEY = "h5r@mg7$#ueqdstj";
     public static final String DEFAULT_PUSHER_APP_ID = "com.dial09";
     public static final String DEFAULT_PUSHER_URL = "  ";
+    public static String PushMsgID = "";
 
 
 
