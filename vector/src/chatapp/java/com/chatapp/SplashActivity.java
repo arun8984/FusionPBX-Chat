@@ -136,7 +136,11 @@ public class SplashActivity extends AppCompatActivity {
         btnGetStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SplashActivity.this, IntroActivity.class));
+                SharedPreferences settings = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean("ShowWelcome", false);
+                editor.commit();
+                startActivity(new Intent(SplashActivity.this, FusionPBXLoginActivity.class));
                 finish();
             }
         });
@@ -481,7 +485,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onResume();
 
         showNotification();
-        if(Matrix.getInstance(this).getDefaultSession()==null){
+        if (Matrix.getInstance(this).getDefaultSession() == null) {
             NoitficationUtils.cancelNotification(this);
             NoitficationUtils.cancelNotification(this);
             NoitficationUtils.cancelNotification(this);
