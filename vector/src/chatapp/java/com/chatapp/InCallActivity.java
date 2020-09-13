@@ -82,7 +82,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
     Ringtone r;
     private PowerManager.WakeLock inCallWakeLock;
     private PowerManager powerManager;
-    AudioManager am;
+    //AudioManager am;
     int original_mode;
     private Date ConnectedDate;
     private View DialPad;
@@ -161,10 +161,10 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
         r = RingtoneManager.getRingtone(getApplicationContext(), notification);
 
-        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        am.setSpeakerphoneOn(false);
+        //am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        //am.setSpeakerphoneOn(false);
 
-        original_mode = am.getMode();
+        //original_mode = am.getMode();
         hasAnswered = false;
         hasConnected = false;
 
@@ -174,8 +174,8 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             PhoneNo = extras.getString("PhoneNo");
             PhoneNo = formatRemoteContactString(PhoneNo);
             if (extras.getString("CallType").equals("Outbound")) {
-                am.setMode(AudioManager.MODE_IN_COMMUNICATION);
-                am.requestAudioFocus(null, am.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN);
+                //am.setMode(AudioManager.MODE_IN_COMMUNICATION);
+                //am.requestAudioFocus(null, am.STREAM_VOICE_CALL, AudioManager.AUDIOFOCUS_GAIN);
                 isOutbound = true;
             } else {
                 //am.setMode(AudioManager.MODE_RINGTONE);
@@ -302,7 +302,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
         timer.schedule(timerTask, 1000, 1000);
 
     }
-
+/*
     private void initBar(SeekBar bar, final int stream) {
         bar.setMax(am.getStreamMaxVolume(stream));
         bar.setProgress(am.getStreamVolume(stream));
@@ -318,7 +318,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
     }
-
+*/
 
     @Override
     protected void onPause() {
@@ -450,7 +450,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                     if (r.isPlaying())
                         r.stop();
 
-                    am.setMode(AudioManager.MODE_IN_COMMUNICATION);
+                    //am.setMode(AudioManager.MODE_IN_COMMUNICATION);
                     service.answer(call.getCallId(), SipCallSession.StatusCode.OK);
                     runOnUiThread(new Runnable() {
                         @Override
@@ -698,7 +698,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             timer = null;
             if (r.isPlaying())
                 r.stop();
-            am.setMode(original_mode);
+            //am.setMode(original_mode);
 
             if (!isOutbound && !hasAnswered) {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
