@@ -19,6 +19,8 @@
 
 package im.vector.push.fcm
 
+import android.content.ComponentName
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -26,9 +28,16 @@ import android.os.Handler
 import android.os.Looper
 import android.os.PowerManager
 import android.text.TextUtils
+import androidx.preference.PreferenceManager
 import com.chatapp.ChatMainActivity
 import com.chatapp.Settings
 import com.chatapp.SplashActivity
+import com.chatapp.sip.api.SipManager
+import com.chatapp.sip.api.SipProfile
+import com.chatapp.sip.db.DBProvider
+import com.chatapp.sip.service.SipService
+import com.chatapp.sip.utils.PreferencesWrapper
+import com.chatapp.sip.wizards.impl.Basic
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.JsonParser
@@ -36,14 +45,12 @@ import im.vector.BuildConfig
 import im.vector.Matrix
 import im.vector.R
 import im.vector.VectorApp
-import im.vector.activity.VectorLauncherActivity
 import im.vector.notifications.NotifiableEventResolver
 import im.vector.notifications.NotifiableMessageEvent
 import im.vector.notifications.SimpleNotifiableEvent
 import im.vector.push.PushManager
 import im.vector.services.EventStreamServiceX
 import im.vector.ui.badge.BadgeProxy
-import org.json.JSONObject
 import org.matrix.androidsdk.MXSession
 import org.matrix.androidsdk.core.Log
 import org.matrix.androidsdk.rest.model.Event
@@ -96,13 +103,21 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
             try {
 
                 val MsgType = message.data["MsgType"].toString();
-
                 if (MsgType == "INCOMINALERT") {
-                    val mainactiviy = Intent(baseContext, SplashActivity::class.java)
-                    mainactiviy.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    mainactiviy.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    Settings.PushMsgID = message.getMessageId().toString();
-                    startActivity(mainactiviy)
+                    if (VectorApp.isAppInBackground()){
+                        //StartSip()
+                        val mainactiviy = Intent(baseContext, SplashActivity::class.java)
+                        mainactiviy.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        mainactiviy.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        Settings.PushMsgID = message.getMessageId().toString();
+                        startActivity(mainactiviy)
+                    }else {
+                        val mainactiviy = Intent(baseContext, SplashActivity::class.java)
+                        mainactiviy.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        mainactiviy.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        Settings.PushMsgID = message.getMessageId().toString();
+                        startActivity(mainactiviy)
+                    }
                     processed = true;
                 }
             } catch (e: java.lang.Exception) {
@@ -305,6 +320,77 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
 
     companion object {
         private val LOG_TAG = VectorFirebaseMessagingService::class.java.simpleName
+    }
+
+    private fun StartSip(){
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Settings.SIPDomain = sharedPreferences.getString("Domain", "")
+        Settings.SIPServer = String.format("%s:%d", Settings.SIPDomain, Settings.SIPPort)
+        ChatMainActivity.SipUsername = sharedPreferences.getString("Username", "")
+        ChatMainActivity.SipPassword = sharedPreferences.getString("Password", "")
+        ChatMainActivity.Username = ChatMainActivity.SipUsername
+        var wizard: Basic;
+        var wizardId: String = "Basic";
+        try {
+            wizard = Basic::class.java.newInstance()
+
+
+            val t: Thread = object : Thread("StartSip") {
+                override fun run() {
+                    val serviceIntent = Intent(this@VectorFirebaseMessagingService, SipService::class.java)
+                    serviceIntent.putExtra(SipManager.EXTRA_OUTGOING_ACTIVITY, ComponentName(this@VectorFirebaseMessagingService, ChatMainActivity::class.java))
+                    try {
+                        startService(serviceIntent)
+                    } catch (e: java.lang.Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            t.start()
+            val accountId: Long = 1
+            ChatMainActivity.account = SipProfile.getProfileFromDbId(this, accountId, DBProvider.ACCOUNT_FULL_PROJECTION)
+            var needRestart = false
+            val prefs = PreferencesWrapper(
+                    applicationContext)
+            ChatMainActivity.account = wizard.buildAccount(ChatMainActivity.account)
+            ChatMainActivity.account.wizard = wizardId
+            if (ChatMainActivity.account.id == SipProfile.INVALID_ID) {
+                // This account does not exists yet
+                prefs.startEditing()
+                wizard.setDefaultParams(prefs)
+                prefs.endEditing()
+                val uri = contentResolver.insert(SipProfile.ACCOUNT_URI,
+                        ChatMainActivity.account.dbContentValues)
+
+                // After insert, add filters for this wizard
+                ChatMainActivity.account.id = ContentUris.parseId(uri)
+                val filters = wizard.getDefaultFilters(ChatMainActivity.account)
+                if (filters != null) {
+                    for (filter in filters) {
+                        // Ensure the correct id if not done by the wizard
+                        filter.account = ChatMainActivity.account.id.toInt()
+                        contentResolver.insert(SipManager.FILTER_URI,
+                                filter.dbContentValues)
+                    }
+                }
+                // Check if we have to restart
+                needRestart = wizard.needRestart()
+            } else {
+                prefs.startEditing()
+                wizard.setDefaultParams(prefs)
+                prefs.endEditing()
+                contentResolver.update(
+                        ContentUris.withAppendedId(SipProfile.ACCOUNT_ID_URI_BASE,
+                                ChatMainActivity.account.id), ChatMainActivity.account.dbContentValues, null,
+                        null)
+            }
+            if (needRestart) {
+                val intent = Intent(SipManager.ACTION_SIP_REQUEST_RESTART)
+                sendBroadcast(intent)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace();
+        }
     }
 
 }

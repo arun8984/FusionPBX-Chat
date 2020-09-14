@@ -49,6 +49,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -245,7 +246,28 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
         SipUsername = sharedPreferences.getString("Username", "");
         SipPassword = sharedPreferences.getString("Password", "");
         Username = SipUsername;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!android.provider.Settings.canDrawOverlays(this)) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                                startActivityForResult(intent, 0);
+                                break;
 
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setMessage("App requires \"Draw over other apps\" permission to display incoming call. So could you please provide the permission?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).setCancelable(false).show();
+            }
+        }
         setWizardId();
         startSipService();
         long accountId = 1;

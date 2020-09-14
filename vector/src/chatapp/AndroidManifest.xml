@@ -4,7 +4,7 @@
     package="im.vector"
     android:installLocation="auto"
     tools:ignore="LockedOrientationActivity">
-
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"></uses-permission>
     <application>
 
         <service
