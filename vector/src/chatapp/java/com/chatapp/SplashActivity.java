@@ -136,7 +136,7 @@ public class SplashActivity extends AppCompatActivity {
         btnGetStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences settings = android.preference.PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences settings = android.preference.PreferenceManager.getDefaultSharedPreferences(SplashActivity.this);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putBoolean("ShowWelcome", false);
                 editor.commit();
