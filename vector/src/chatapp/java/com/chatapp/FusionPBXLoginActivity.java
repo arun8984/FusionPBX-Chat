@@ -13,7 +13,10 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -45,7 +48,7 @@ import im.vector.activity.LoginActivity;
 import im.vector.push.fcm.FcmHelper;
 import im.vector.receiver.VectorUniversalLinkReceiver;
 
-public class FusionPBXLoginActivity extends AppCompatActivity {
+public class FusionPBXLoginActivity extends AppCompatActivity implements RadioButton.OnCheckedChangeListener {
     Spinner spinner;
     ArrayList<String> Domains;
     ArrayList<String> Domains_UUID;
@@ -56,17 +59,23 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
     private Parcelable mUniversalLinkUri;
     private final LoginHandler mLoginHandler = new LoginHandler();
     private HomeServerConnectionConfig mHomeserverConnectionConfig;
+    private RadioButton rbEdit, rbServer;
+    private EditText url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fusion_p_b_x_login);
-
         // warn that the application has started.
         CommonActivityUtils.onApplicationStarted(this);
 
         FcmHelper.ensureFcmTokenIsRetrieved(this);
-
+        url = findViewById(R.id.serverurl);
+        rbEdit = findViewById(R.id.rbEdit);
+        rbServer = findViewById(R.id.rbSpinner);
+        rbEdit.setOnCheckedChangeListener(this);
+        rbServer.setOnCheckedChangeListener(this);
+        rbServer.setChecked(true);
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         Boolean ShowWelcome = settings.getBoolean("ShowWelcome", true);
         if (ShowWelcome) {
@@ -124,22 +133,51 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SelectedDomainID != null) {
-                    if (!txtUsername.getText().toString().isEmpty()) {
-                        if (!txtPassword.getText().toString().isEmpty()) {
-                            Login(Domains.get(SelectedDomainID), Domains_UUID.get(SelectedDomainID), txtUsername.getText().toString(), txtPassword.getText().toString());
+                if (rbEdit.isChecked()) {
+                    String domain = url.getText().toString().trim();
+                    SelectedDomainID = getSelectedItemPosition(domain);
+                    if (SelectedDomainID == -1) {
+                        Toast.makeText(getApplicationContext(), "Not a valid domain.", Toast.LENGTH_LONG).show();
+                    } else if (SelectedDomainID != null) {
+                        if (!txtUsername.getText().toString().isEmpty()) {
+                            if (!txtPassword.getText().toString().isEmpty()) {
+                                Login(Domains.get(SelectedDomainID), Domains_UUID.get(SelectedDomainID), txtUsername.getText().toString(), txtPassword.getText().toString());
+                            } else {
+                                txtPassword.setError("Password is required");
+                            }
                         } else {
-                            txtPassword.setError("Password is required");
+                            txtUsername.setError("Username is required");
                         }
-                    } else {
-                        txtUsername.setError("Username is required");
-                    }
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "Select a domain.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Select a domain.", Toast.LENGTH_LONG).show();
+                    }
+                } else if (rbServer.isChecked()) {
+                    if (SelectedDomainID != null) {
+                        if (!txtUsername.getText().toString().isEmpty()) {
+                            if (!txtPassword.getText().toString().isEmpty()) {
+                                Login(Domains.get(SelectedDomainID), Domains_UUID.get(SelectedDomainID), txtUsername.getText().toString(), txtPassword.getText().toString());
+                            } else {
+                                txtPassword.setError("Password is required");
+                            }
+                        } else {
+                            txtUsername.setError("Username is required");
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Select a domain.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
+    }
+
+    private Integer getSelectedItemPosition(String domain) {
+        for (int i = 0; i < Domains.size(); i++) {
+            if (domain.equalsIgnoreCase(Domains.get(i)))
+                return i;
+        }
+        return -1;
     }
 
     private void showDialog() {
@@ -351,5 +389,16 @@ public class FusionPBXLoginActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, getString(R.string.login_error_invalid_home_server), Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (buttonView.isChecked())
+            if (buttonView.getId() == rbServer.getId()) {
+                rbEdit.setChecked(false);
+            } else {
+                rbServer.setChecked(false);
+            }
     }
 }

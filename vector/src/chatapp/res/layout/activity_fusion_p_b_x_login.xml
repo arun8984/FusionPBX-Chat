@@ -16,18 +16,50 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_transparent" />
 
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rbEdit"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/serverurl"
+        app:layout_constraintEnd_toStartOf="@id/serverurl"
+        app:layout_constraintBottom_toBottomOf="@id/serverurl"/>
+
+    <EditText
+        android:id="@+id/serverurl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:hint="@string/enter_your_url"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintBottom_toTopOf="@+id/spinner2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/rbEdit" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rbSpinner"
+        app:layout_constraintStart_toStartOf="@id/rbEdit"
+        app:layout_constraintTop_toTopOf="@id/spinner2"
+        app:layout_constraintEnd_toEndOf="@id/rbEdit"
+        app:layout_constraintBottom_toBottomOf="@id/spinner2"/>
+
+
     <Spinner
         android:id="@+id/spinner2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
+        android:layout_marginStart="14dp"
         android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
         app:layout_constraintBottom_toTopOf="@+id/txtUsername"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/serverurl" />
 
     <EditText
         android:id="@+id/txtUsername"

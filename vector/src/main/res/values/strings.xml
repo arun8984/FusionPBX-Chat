@@ -1819,5 +1819,6 @@ Not all features in Riot are implemented in RiotX yet. Main missing (and coming 
     <string name="video_teriff">Video Teriff</string>
     <string name="interswitch_buy">Interswitch Buy</string>
     <string name="title_home">Home</string>
+    <string name="enter_your_url">Enter your url</string>
 
 </resources>
