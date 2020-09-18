@@ -119,8 +119,8 @@
             >
         <ImageView
             android:id="@+id/btn_dialpad_call"
-            android:layout_width="60dp"
-            android:layout_height="80dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="@drawable/table_row_bg"
             android:src="@drawable/call" />
         </LinearLayout>
