@@ -128,7 +128,7 @@ public class SplashActivity extends AppCompatActivity {
         txtTerms = (TextView) findViewById(R.id.txtPrivacy_Terms);
         txtTerms.setClickable(true);
         txtTerms.setMovementMethod(LinkMovementMethod.getInstance());
-        String text = "Agree to your <a href=\"https://whizzapp.net/privacy-policy.html\">Privacy</a> and <a href=\"https://whizzapp.net/privacy-policy.html\">Terms Conditions</a>";
+        String text = "Agree to your <a href=\"http://linqhd.app/privacy\">Privacy</a> and <a href=\"http://linqhd.app/privacy\">Terms Conditions</a>";
         txtTerms.setText(Html.fromHtml(text));
         txtTerms.setLinkTextColor(Color.parseColor("#38A7B6"));
         btnGetStarted = (Button) findViewById(R.id.loginSplashSubmit);
