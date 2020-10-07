@@ -1,43 +1,37 @@
 {
   "project_info": {
-    "project_number": "912726360885",
-    "firebase_url": "https://vector-alpha.firebaseio.com",
-    "project_id": "vector-alpha",
-    "storage_bucket": "vector-alpha.appspot.com"
+    "project_number": "435381709686",
+    "firebase_url": "https://dial09.firebaseio.com",
+    "project_id": "dial09",
+    "storage_bucket": "dial09.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:912726360885:android:448c9b63161abc9c",
+        "mobilesdk_app_id": "1:435381709686:android:a443823c595604ed3e6857",
         "android_client_info": {
-          "package_name": "im.vector.app"
+          "package_name": "com.dial09"
         }
       },
       "oauth_client": [
         {
-          "client_id": "912726360885-rsae0i66rgqt6ivnudu1pv4tksg9i8b2.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "912726360885-e87n3jva9uoj4vbidvijq78ebg02asv2.apps.googleusercontent.com",
+          "client_id": "435381709686-20jsliinkm2l5a67kcoiqsm1ibd31n0e.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAFZX8IhIfgzdOZvxDP_ISO5WYoU7jmQ5c"
+          "current_key": "AIzaSyAS8TbznpiX0uPiGTazbz1My9cL1GntR8A"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "435381709686-20jsliinkm2l5a67kcoiqsm1ibd31n0e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
