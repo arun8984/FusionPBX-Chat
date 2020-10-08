@@ -1,12 +1,16 @@
 package com.chatapp;
 
+import android.Manifest;
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,16 +22,20 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.RemoteException;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import android.view.View;
 import android.view.WindowManager;
@@ -37,6 +45,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chatapp.sip.api.ISipService;
 import com.chatapp.sip.api.SipCallSession;
@@ -50,6 +59,9 @@ import com.chatapp.sip.utils.Compatibility;
 import com.chatapp.sip.utils.Log;
 import com.chatapp.util.RecentDBHandler;
 
+
+import org.matrix.androidsdk.core.callback.SimpleApiCallback;
+import org.matrix.androidsdk.core.model.MatrixError;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -73,9 +85,9 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
     private String Duration = "0";
     String currentDateandTime;
     private Long CallID;
-    ImageButton btnNumberPad, btnSpeaker, btnMute, btnHold, btnAnswer, btnHangup2;
+    ImageButton btnNumberPad, btnSpeaker, btnMute, btnBluetooth, btnAnswer, btnHangup2;
     Timer timer;
-    ImageView btnHangup;
+    ImageView btnHangup, btnCalltransfer;
     TimerTask timerTask;
     final Handler handler = new Handler();
     private boolean isOutbound, hasAnswered, hasConnected;
@@ -212,18 +224,22 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
         //btnNumberPad = (ImageButton) findViewById(R.id.btnNumberpad);
         btnSpeaker = (ImageButton) findViewById(R.id.btnSpeaker);
         btnMute = (ImageButton) findViewById(R.id.btnMute);
-        //btnHold = (ImageButton) findViewById(R.id.btnHold);
+        btnBluetooth = (ImageButton) findViewById(R.id.btn_bluetooth);
         btnHangup = (ImageView) findViewById(R.id.btnHangup);
         btnAnswer = (ImageButton) findViewById(R.id.btnAnswer);
         btnHangup2 = (ImageButton) findViewById(R.id.btnHangup2);
+        btnCalltransfer = (ImageView) findViewById(R.id.call_transfer);
+
+
 
         //btnNumberPad.setOnClickListener(this);
         btnSpeaker.setOnClickListener(this);
         btnMute.setOnClickListener(this);
-        //btnHold.setOnClickListener(this);
+        btnBluetooth.setOnClickListener(this);
         btnHangup.setOnClickListener(this);
         btnAnswer.setOnClickListener(this);
         btnHangup2.setOnClickListener(this);
+        btnCalltransfer.setOnClickListener(this);
 
         DialPad = (View) findViewById(R.id.DTMFDialPad);
         btnDialPad = (ImageView) findViewById(R.id.btnDialPad);
@@ -423,6 +439,9 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.call_transfer:
+                CallTransfer();
+                break;
             case R.id.btnSpeaker:
                 toggleSpeaker();
                 break;
@@ -716,6 +735,45 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
 
         }
         finish();
+    }
+
+    private void CallTransfer(){
+        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        final EditText edittext = new EditText(this);
+        alert.setMessage("");
+        alert.setTitle("Enter the number to transfer");
+
+        alert.setView(edittext);
+
+        alert.setPositiveButton("Transfer", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String ToPhone = edittext.getText().toString().trim();
+                if (!ToPhone.isEmpty()) {
+                    try {
+                        if (ContextCompat.checkSelfPermission(InCallActivity.this, Manifest.permission.USE_SIP)
+                                == PackageManager.PERMISSION_GRANTED){
+
+                            service.xfer(call.getCallId(), "sip:" + ToPhone + "@" + Settings.SIPDomain);
+                            //DisconnectCall();
+                        }else{
+                            ActivityCompat.requestPermissions(InCallActivity.this, new String[]{Manifest.permission.USE_SIP}, 0);
+                        }
+
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(InCallActivity.this, "Transfer number can not be empty.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+            }
+        });
+        alert.show();
     }
 
     public void initializeTimerTask() {

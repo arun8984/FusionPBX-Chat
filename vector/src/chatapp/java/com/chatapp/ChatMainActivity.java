@@ -71,6 +71,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.chatapp.sip.api.ISipService;
+import com.chatapp.sip.api.SipConfigManager;
 import com.chatapp.sip.api.SipManager;
 import com.chatapp.sip.api.SipProfile;
 import com.chatapp.sip.db.DBProvider;
@@ -582,6 +583,9 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
     private void startSipService() {
         Thread t = new Thread("StartSip") {
             public void run() {
+                SipConfigManager.setPreferenceBooleanValue(ChatMainActivity.this,SipConfigManager.ENABLE_STUN,true);
+                SipConfigManager.setPreferenceStringValue (ChatMainActivity.this,SipConfigManager.STUN_SERVER ,"stun.l.google.com:19302");
+                //SipConfigManager.setPreferenceBooleanValue(ChatMainActivity.this,SipConfigManager.AUTO_CONNECT_BLUETOOTH,true);
                 Intent serviceIntent = new Intent(ChatMainActivity.this, SipService.class);
                 serviceIntent.putExtra(SipManager.EXTRA_OUTGOING_ACTIVITY, new ComponentName(ChatMainActivity.this, ChatMainActivity.class));
                 try {
