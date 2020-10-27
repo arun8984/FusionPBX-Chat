@@ -112,6 +112,7 @@ public class Basic extends BaseImplementation {
 		// By default auto transport
 		// account.transport = SipProfile.TRANSPORT_UDP;
 		account.transport = SipProfile.TRANSPORT_AUTO;
+		account.mwi_enabled = true;
 		return account;
 	}
 

@@ -108,21 +108,22 @@
             android:layout_height="match_parent"
             android:layout_weight="10"
             android:background="@drawable/table_row_bg"
-            android:scaleType="centerInside"
-            android:tint="@color/colorPrimaryRed"
-            android:src="@drawable/add_user" />
+            android:scaleType="center"
+            android:src="@drawable/voicemail"
+            android:tint="@color/colorPrimaryRed" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:layout_weight="10"
             >
-        <ImageView
-            android:id="@+id/btn_dialpad_call"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/table_row_bg"
-            android:src="@drawable/call" />
+
+            <ImageView
+                android:id="@+id/btn_dialpad_call"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/table_row_bg"
+                android:src="@drawable/call" />
         </LinearLayout>
         <ImageButton
             android:id="@+id/btn_dialpad_delete"

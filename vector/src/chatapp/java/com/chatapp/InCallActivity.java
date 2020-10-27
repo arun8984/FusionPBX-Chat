@@ -84,7 +84,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
     private boolean isSpeakerEnabled = false, isMuted = false, isNumberPadEnabled = false, isOnHold = false, isAnimationDisabled = true;
     private String Duration = "0";
     String currentDateandTime;
-    private Long CallID;
+    private Long CallID = 0l;
     ImageButton btnNumberPad, btnSpeaker, btnMute, btnBluetooth, btnAnswer, btnHangup2;
     Timer timer;
     ImageView btnHangup, btnCalltransfer;
@@ -200,7 +200,6 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
         if (isOutbound) {
             Direction = 1;
         }
-        CallID = recentDBHandler.AddRecent(1, PhoneNo, currentDateandTime, "0", Direction);
 
         //if(Settings.hasContactPermission) {
         if (PermissionsToolsKt.checkPermissions(PermissionsToolsKt.PERMISSIONS_FOR_MEMBERS_SEARCH, this, PermissionsToolsKt.PERMISSION_REQUEST_CODE)) {
@@ -212,6 +211,12 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             ContactId = "";
         }
 
+        if(!PhoneNo.equals("*97")) {
+            CallID = recentDBHandler.AddRecent(1, PhoneNo, currentDateandTime, "0", Direction);
+        }else{
+            ContactName = "Voice Mail";
+            ContactId = "";
+        }
 
         TextView lblName = (TextView) findViewById(R.id.lblName);
         imgContact = (ImageView) findViewById(R.id.imgContact);
@@ -518,7 +523,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "1");
 
-                    service.sendDtmf(call.getCallId(), 1);
+                    service.sendDtmf(call.getCallId(), 8);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_1, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -529,7 +534,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "2");
 
-                    service.sendDtmf(call.getCallId(), 2);
+                    service.sendDtmf(call.getCallId(), 9);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_2, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -540,7 +545,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "3");
 
-                    service.sendDtmf(call.getCallId(), 3);
+                    service.sendDtmf(call.getCallId(), 10);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_3, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -551,7 +556,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "4");
 
-                    service.sendDtmf(call.getCallId(), 4);
+                    service.sendDtmf(call.getCallId(), 11);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_4, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -562,7 +567,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "5");
 
-                    service.sendDtmf(call.getCallId(), 5);
+                    service.sendDtmf(call.getCallId(), 12);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_5, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -573,7 +578,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "6");
 
-                    service.sendDtmf(call.getCallId(), 6);
+                    service.sendDtmf(call.getCallId(), 13);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_6, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -584,7 +589,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "7");
 
-                    service.sendDtmf(call.getCallId(), 7);
+                    service.sendDtmf(call.getCallId(), 14);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_7, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -595,7 +600,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "8");
 
-                    service.sendDtmf(call.getCallId(), 8);
+                    service.sendDtmf(call.getCallId(), 15);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_8, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -606,7 +611,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "9");
 
-                    service.sendDtmf(call.getCallId(), 9);
+                    service.sendDtmf(call.getCallId(), 16);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_9, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -617,7 +622,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "#");
 
-                    service.sendDtmf(call.getCallId(), 11);
+                    service.sendDtmf(call.getCallId(), 18);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_P, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {
@@ -628,7 +633,7 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     txtDTMF.getText().insert(txtDTMF.getSelectionStart(), "*");
 
-                    service.sendDtmf(call.getCallId(), 10);
+                    service.sendDtmf(call.getCallId(), 17);
                     dtmfGenerator.startTone(ToneGenerator.TONE_DTMF_S, 1000);
                     dtmfGenerator.stopTone();
                 } catch (Exception e) {

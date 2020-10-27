@@ -279,12 +279,25 @@ public class DialerFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.btn_dialpad_contact:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_MICROPHONE);
+                } else {
+                    try {
+                        ChatMainActivity superActivity = ((ChatMainActivity)getActivity());
 
-                if (txtDialNumber.getText().toString().length()>0) {
-                    Intent intent = new Intent(ContactsContract.Intents.SHOW_OR_CREATE_CONTACT, Uri.parse("tel:" + txtDialNumber.getText()));
-                    intent.putExtra(ContactsContract.Intents.EXTRA_FORCE_CREATE, true);
-                    startActivity(intent);
+                        ISipService service = superActivity.getConnectedService();
+                        service.makeCall("*97", 1);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
+                /*
+                Intent intent = new Intent(ContactsContract.Intents.SHOW_OR_CREATE_CONTACT, Uri.parse("tel:" + txtDialNumber.getText()));
+                intent.putExtra(ContactsContract.Intents.EXTRA_FORCE_CREATE, true);
+                startActivity(intent);
+                 */
+
                 break;
 
             case R.id.btn_dialpad_call:
