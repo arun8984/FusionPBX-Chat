@@ -1313,8 +1313,9 @@ public class SipService extends Service {
 	// This is always done in SipExecutor thread
 	private void startSipStack() throws SameThreadException {
 		//Cache some prefs
+		SipConfigManager.setPreferenceBooleanValue(this, SipConfigManager.SUPPORT_MULTIPLE_CALLS, true);
 		supportMultipleCalls = prefsWrapper.getPreferenceBooleanValue(SipConfigManager.SUPPORT_MULTIPLE_CALLS);
-		
+		supportMultipleCalls = true;
 		if(!isConnectivityValid()) {
 		    notifyUserOfMessage(R.string.connection_not_valid);
 			Log.e(THIS_FILE, "No need to start sip");

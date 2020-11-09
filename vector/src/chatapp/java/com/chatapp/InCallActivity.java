@@ -37,6 +37,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -49,6 +50,7 @@ import android.widget.Toast;
 
 import com.chatapp.sip.api.ISipService;
 import com.chatapp.sip.api.SipCallSession;
+import com.chatapp.sip.api.SipConfigManager;
 import com.chatapp.sip.api.SipManager;
 import com.chatapp.sip.api.SipProfile;
 import com.chatapp.sip.api.SipUri;
@@ -62,6 +64,7 @@ import com.chatapp.util.RecentDBHandler;
 
 import org.matrix.androidsdk.core.callback.SimpleApiCallback;
 import org.matrix.androidsdk.core.model.MatrixError;
+import org.pjsip.pjsua.pjsua;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -439,11 +442,43 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
             finish();
         }
     }
+private void AddCall(){
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Phone Number");
+    final EditText input = new EditText(this);
+    input.setInputType(InputType.TYPE_CLASS_PHONE);
+    builder.setView(input);
+    builder.setPositiveButton("Add Call", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
 
+            try {
+                ISipService service = ChatMainActivity.getInstance().getConnectedService();
+                //SipConfigManager.setPreferenceBooleanValue(this, SipConfigManager.SUPPORT_MULTIPLE_CALLS, true);
+                //service.sipStart();
+                service.makeCall(input.getText().toString(), 1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    });
+    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
+        }
+    });
+
+    builder.show();
+
+}
     @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.btn_bluetooth:
+                AddCall();
+                break;
             case R.id.call_transfer:
                 CallTransfer();
                 break;
@@ -712,7 +747,11 @@ public class InCallActivity extends AppCompatActivity implements View.OnClickLis
                 e.printStackTrace();
             }
              */
-            service.hangup(call.getCallId(), SipCallSession.StatusCode.OK);
+            SipCallSession[] callSessions = service.getCalls();
+            for (SipCallSession callSession:callSessions) {
+                service.hangup(callSession.getCallId(), SipCallSession.StatusCode.OK);
+            }
+
             this.unbindService(connection);
             RecentDBHandler recentDBHandler = new RecentDBHandler(this);
             recentDBHandler.SetDuration(CallID, Duration);

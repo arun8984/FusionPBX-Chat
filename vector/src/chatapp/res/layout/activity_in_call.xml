@@ -181,7 +181,7 @@
                 android:layout_weight="10"
                 android:background="@color/colorPrimary"
                 android:scaleType="centerInside"
-                android:src="@drawable/bluetooth_active" />
+                android:src="@drawable/addcall" />
             
         </LinearLayout>
 

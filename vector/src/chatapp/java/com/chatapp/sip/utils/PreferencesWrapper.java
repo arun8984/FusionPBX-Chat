@@ -217,7 +217,7 @@ public class PreferencesWrapper {
 		
 		//Calls
 		put(SipConfigManager.AUTO_RECORD_CALLS, false);
-		put(SipConfigManager.SUPPORT_MULTIPLE_CALLS, false);
+		put(SipConfigManager.SUPPORT_MULTIPLE_CALLS, true);
         put(SipConfigManager.USE_VIDEO, false);
         put(SipConfigManager.PLAY_WAITTONE_ON_HOLD, true);
 		
