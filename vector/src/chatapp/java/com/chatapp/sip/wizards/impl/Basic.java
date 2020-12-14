@@ -92,7 +92,7 @@ public class Basic extends BaseImplementation {
 				,user = ChatMainActivity.SipUsername//account.getSipUserName()
 				, pass = ChatMainActivity.SipPassword//account.getPassword()
 				, proxy=""; //AccountWizard.proxy.getText().toString();
-		account.display_name = "MTN9ja";
+		account.display_name = ChatMainActivity.SipUsername;
 
 		String[] serverParts = sip.split(":");
 		account.acc_id = "<sip:" + SipUri.encodeUser(user.trim()) + "@"

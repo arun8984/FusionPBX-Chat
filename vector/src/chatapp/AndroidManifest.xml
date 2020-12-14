@@ -106,7 +106,7 @@
             android:name="com.chatapp.sip.db.DBProvider"
             android:authorities="${applicationId}.db"
             android:permission="android.permission.CONFIGURE_SIP"
-            android:process=":sipStack" />
+             />
 
         <receiver android:name="com.chatapp.sip.service.HeadsetButtonReceiver" />
         <receiver
@@ -126,7 +126,7 @@
         <receiver
             android:name="com.chatapp.sip.service.DeviceStateReceiver"
             android:permission="android.permission.CONFIGURE_SIP"
-            android:process=":sipStack">
+            >
 
             <!-- Here filter for protected-broadcasts -->
             <intent-filter>
@@ -160,7 +160,7 @@
             android:name="com.chatapp.sip.service.SipService"
             android:exported="false"
             android:permission="android.permission.CONFIGURE_SIP"
-            android:process=":sipStack">
+            >
             <intent-filter>
                 <action android:name="com.chatapp.sip.service.SipService" />
                 <action android:name="com.chatapp.sip.service.SipConfiguration" />

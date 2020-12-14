@@ -19,7 +19,6 @@
 
 package im.vector.push.fcm
 
-import android.content.ComponentName
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
@@ -29,9 +28,14 @@ import android.os.Looper
 import android.os.PowerManager
 import android.text.TextUtils
 import androidx.preference.PreferenceManager
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.RetryPolicy
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.chatapp.ChatMainActivity
 import com.chatapp.Settings
-import com.chatapp.SplashActivity
 import com.chatapp.sip.api.SipManager
 import com.chatapp.sip.api.SipProfile
 import com.chatapp.sip.db.DBProvider
@@ -104,19 +108,47 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
 
                 val MsgType = message.data["MsgType"].toString();
                 if (MsgType == "INCOMINALERT") {
+                    Settings.PushMsgID = message.getMessageId().toString();
                     if (VectorApp.isAppInBackground()){
-                        //StartSip()
+                        StartSip()
+
+                        //val intent = Intent(SipManager.ACTION_SIP_REQUEST_RESTART);
+                        //sendBroadcast(intent);
+                        /*
                         val mainactiviy = Intent(baseContext, SplashActivity::class.java)
                         mainactiviy.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         mainactiviy.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         Settings.PushMsgID = message.getMessageId().toString();
                         startActivity(mainactiviy)
+                         */
                     }else {
+                        if (Settings.PushMsgID != "") {
+                            try {
+                                val url = String.format("%sextensions/ackpush.php?key=%s&msgid=%s",
+                                        getResources().getString(R.string.FusionPBX_API_Url), getResources().getString(R.string.FusionPBX_API_Key),
+                                        Settings.PushMsgID)
+                                val requestQueue = Volley.newRequestQueue(this)
+                                val stringRequest = StringRequest(Request.Method.GET, url, Response.Listener { }, Response.ErrorListener { volleyError -> volleyError.printStackTrace() })
+                                val socketTimeout = 30000
+                                val policy: RetryPolicy = DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+                                stringRequest.retryPolicy = policy
+                                requestQueue.add(stringRequest)
+                                Settings.PushMsgID = ""
+                            } catch (e: java.lang.Exception) {
+                                e.printStackTrace()
+                            }
+                        }
+
+                        //val intent = Intent(SipManager.ACTION_SIP_REQUEST_RESTART);
+                        //sendBroadcast(intent);
+
+                        /*
                         val mainactiviy = Intent(baseContext, SplashActivity::class.java)
                         mainactiviy.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         mainactiviy.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         Settings.PushMsgID = message.getMessageId().toString();
                         startActivity(mainactiviy)
+                         */
                     }
                     processed = true;
                 }
@@ -338,9 +370,13 @@ class VectorFirebaseMessagingService : FirebaseMessagingService() {
             val t: Thread = object : Thread("StartSip") {
                 override fun run() {
                     val serviceIntent = Intent(this@VectorFirebaseMessagingService, SipService::class.java)
-                    serviceIntent.putExtra(SipManager.EXTRA_OUTGOING_ACTIVITY, ComponentName(this@VectorFirebaseMessagingService, ChatMainActivity::class.java))
+                    //serviceIntent.putExtra(SipManager.EXTRA_OUTGOING_ACTIVITY, ComponentName(this@VectorFirebaseMessagingService, ChatMainActivity::class.java))
                     try {
-                        startService(serviceIntent)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            this@VectorFirebaseMessagingService.startForegroundService(serviceIntent);
+                        }else {
+                            startService(serviceIntent)
+                        }
                     } catch (e: java.lang.Exception) {
                         e.printStackTrace()
                     }

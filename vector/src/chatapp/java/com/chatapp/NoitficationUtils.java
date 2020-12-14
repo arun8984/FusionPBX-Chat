@@ -53,7 +53,7 @@ public class NoitficationUtils {
                             .setOngoing(true).setPriority(2);
 
             NotificationManagerCompat mNotificationManager = NotificationManagerCompat.from(context);
-            mNotificationManager.notify(1, mBuilder.build());
+            //mNotificationManager.notify(1, mBuilder.build());
         }
     }
 

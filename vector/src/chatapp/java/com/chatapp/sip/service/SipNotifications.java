@@ -22,12 +22,15 @@
 package com.chatapp.sip.service;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.provider.CallLog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
@@ -40,6 +43,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import im.vector.R;
+import im.vector.push.fcm.FcmHelper;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.chatapp.ChatMainActivity;
+import com.chatapp.Settings;
 import com.chatapp.sip.api.SipCallSession;
 import com.chatapp.sip.api.SipManager;
 import com.chatapp.sip.api.SipMessage;
@@ -58,7 +73,8 @@ import java.util.ArrayList;
 
 public class SipNotifications {
 
-	private final NotificationManager notificationManager;
+	private NotificationManager notificationManager;
+	private NotificationChannel channel;
 	private final Context context;
 	private Builder inCallNotification;
 	private Builder missedCallNotification;
@@ -73,10 +89,17 @@ public class SipNotifications {
 	public static final int VOICEMAIL_NOTIF_ID = REGISTER_NOTIF_ID + 4;
 
 	private static boolean isInit = false;
-
+	private static String SIPCallChannel = "sip_call";
 	public SipNotifications(Context aContext) {
 		context = aContext;
-		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			channel = new NotificationChannel("SIP", "SIP_Notify",
+					NotificationManager.IMPORTANCE_HIGH
+			);
+			notificationManager.createNotificationChannel(channel);
+		}
+
 
 		if (!isInit) {
 			cancelAll();
@@ -226,6 +249,33 @@ public class SipNotifications {
 			return;
 		}
 
+		if(!Settings.PushMsgID.equals("")){
+			try {
+
+				String url = String.format("%sextensions/ackpush.php?key=%s&msgid=%s",
+						context.getResources().getString(R.string.FusionPBX_API_Url), context.getResources().getString(R.string.FusionPBX_API_Key),
+						Settings.PushMsgID);
+				RequestQueue requestQueue = Volley.newRequestQueue(context);
+				StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+					@Override
+					public void onResponse(String s) {
+					}
+				}, new Response.ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError volleyError) {
+						volleyError.printStackTrace();
+					}
+				});
+				int socketTimeout = 30000;
+				RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+				stringRequest.setRetryPolicy(policy);
+				requestQueue.add(stringRequest);
+				Settings.PushMsgID="";
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
 		/*
 		int icon = R.drawable.ic_stat_sipok;
 		CharSequence tickerText = context.getString(R.string.service_ticker_registered_text);
@@ -297,31 +347,70 @@ public class SipNotifications {
 
 	// Calls
 	public void showNotificationForCall(SipCallSession callInfo) {
+
+		NotificationManager mNotificationManager;
+		mNotificationManager =
+				(NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		NotificationCompat.Builder mBuilder =
+				new NotificationCompat.Builder(context.getApplicationContext(), SIPCallChannel);
+		Intent ii = new Intent(context.getApplicationContext(), ChatMainActivity.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, ii, 0);
+
+		NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+		bigText.bigText("123456");
+		bigText.setBigContentTitle("Today's Bible Verse");
+		bigText.setSummaryText("Text in detail");
+		mBuilder.setContentIntent(pendingIntent);
+		mBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+		mBuilder.setContentTitle("Your Title");
+		mBuilder.setContentText("Your text");
+		mBuilder.setPriority(Notification.PRIORITY_MAX);
+		mBuilder.setStyle(bigText);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+		{
+			String channelId = SIPCallChannel;
+			NotificationChannel channel = new NotificationChannel(
+					channelId,
+					"Channel human readable title",
+					NotificationManager.IMPORTANCE_HIGH);
+			mNotificationManager.createNotificationChannel(channel);
+			mBuilder.setChannelId(channelId);
+		}
+		//mNotificationManager.notify(0, mBuilder.build());
+
 		// This is the pending call notification
 		// int icon = R.drawable.ic_incall_ongoing;
 		@SuppressWarnings("deprecation")
         int icon = android.R.drawable.stat_sys_phone_call;
 		CharSequence tickerText = context.getText(R.string.ongoing_call);
 		long when = System.currentTimeMillis();
-
+		inCallNotification = null;
 		if(inCallNotification == null) {
-		    inCallNotification = new NotificationCompat.Builder(context);
-		    inCallNotification.setSmallIcon(icon);
+		    inCallNotification = new NotificationCompat.Builder(context.getApplicationContext(),SIPCallChannel);
+			inCallNotification.setContentTitle(context.getString(R.string.app_name));
+		    inCallNotification.setSmallIcon(R.drawable.icon_notif_important);
+			inCallNotification.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
+			inCallNotification.setCategory(NotificationCompat.CATEGORY_CALL);
 		    inCallNotification.setTicker(tickerText);
 		    inCallNotification.setWhen(when);
 		    inCallNotification.setOngoing(true);
-		}
+			inCallNotification.setPriority(2);
+			}
 
 		Intent notificationIntent = SipService.buildCallUiIntent(context, callInfo);
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+		PendingIntent contentIntent = PendingIntent.getActivity(context.getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         inCallNotification.setContentTitle(formatNotificationTitle(R.string.ongoing_call, callInfo.getAccId()));
         inCallNotification.setContentText(formatRemoteContactString(callInfo.getRemoteContact()));
 		inCallNotification.setContentIntent(contentIntent);
+		inCallNotification.setPriority(NotificationManager.IMPORTANCE_HIGH);
 
 		Notification notification = inCallNotification.build();
 		notification.flags |= Notification.FLAG_NO_CLEAR;
 		notificationManager.notify(CALL_NOTIF_ID, notification);
+
 	}
 
 	public void showNotificationForMissedCall(ContentValues callLog) {
@@ -330,7 +419,7 @@ public class SipNotifications {
 		long when = System.currentTimeMillis();
 
 		if (missedCallNotification == null) {
-	        missedCallNotification = new NotificationCompat.Builder(context);
+	        missedCallNotification = new NotificationCompat.Builder(context,SIPCallChannel);
 	        missedCallNotification.setSmallIcon(icon);
 	        missedCallNotification.setTicker(tickerText);
 	        missedCallNotification.setWhen(when);
@@ -365,7 +454,7 @@ public class SipNotifications {
 			CharSequence tickerText = buildTickerMessage(context, from, msg.getBody());
 
 			if (messageNotification == null) {
-				messageNotification = new NotificationCompat.Builder(context);
+				messageNotification = new NotificationCompat.Builder(context,SIPCallChannel);
 				//messageNotification.setSmallIcon(SipUri.isPhoneNumber(from) ? R.drawable.stat_notify_sms : android.R.drawable.stat_notify_chat);
 				messageNotification.setTicker(tickerText);
 				messageNotification.setWhen(System.currentTimeMillis());
@@ -391,7 +480,7 @@ public class SipNotifications {
     public void showNotificationForVoiceMail(SipProfile acc, int numberOfMessages) {
         if (messageVoicemail == null) {
 
-            messageVoicemail = new NotificationCompat.Builder(context);
+            messageVoicemail = new NotificationCompat.Builder(context,SIPCallChannel);
             messageVoicemail.setSmallIcon(android.R.drawable.stat_notify_voicemail);
             messageVoicemail.setTicker(context.getString(R.string.voice_mail));
             messageVoicemail.setWhen(System.currentTimeMillis());

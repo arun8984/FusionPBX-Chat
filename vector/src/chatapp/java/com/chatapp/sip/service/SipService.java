@@ -22,6 +22,9 @@
 package com.chatapp.sip.service;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -31,11 +34,13 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.DetailedState;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiManager.WifiLock;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -52,6 +57,9 @@ import android.text.TextUtils;
 import android.view.SurfaceView;
 import android.widget.Toast;
 
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import com.chatapp.sip.api.ISipConfiguration;
 import com.chatapp.sip.api.ISipService;
@@ -1022,9 +1030,35 @@ public class SipService extends Service {
 		}
 	}
 
+	@RequiresApi(Build.VERSION_CODES.O)
+	private String createNotificationChannel(String channelId, String channelName){
+		NotificationChannel chan = new NotificationChannel(channelId,channelName, NotificationManager.IMPORTANCE_HIGH);
+		chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+		NotificationManager service = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		service.createNotificationChannel(chan);
+		return channelId;
+	}
+
+
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		int NOTIFICATION_ID = (int) (System.currentTimeMillis()%10000);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			String channelId = createNotificationChannel("sip_call", "SIP Service");
+
+			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,channelId);
+			Notification notification = notificationBuilder.setOngoing(true)
+					.setSmallIcon(R.mipmap.ic_launcher)
+					.setPriority(NotificationCompat.PRIORITY_MIN)
+					.setCategory(Notification.CATEGORY_SERVICE)
+					.build();
+			startForeground(NOTIFICATION_ID,notification);
+			//startForeground(NOTIFICATION_ID, new NotificationCompat.Builder(this,"sip_call").build());
+		}
+
 		singleton = this;
 
 		Log.i(THIS_FILE, "Create SIP Service");

@@ -16,6 +16,7 @@
 
 package com.chatapp;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -26,6 +27,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
@@ -51,6 +53,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavArgument;
@@ -269,12 +273,21 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
                         .setNegativeButton("No", dialogClickListener).setCancelable(false).show();
             }
         }
-        setWizardId();
-        startSipService();
-        long accountId = 1;
-        account = SipProfile.getProfileFromDbId(this, accountId, DBProvider.ACCOUNT_FULL_PROJECTION);
-        saveAccount(wizardId);
-        bindService(new Intent(this, SipService.class), connection, Context.BIND_AUTO_CREATE);
+        if (ContextCompat.checkSelfPermission(
+                ChatMainActivity.this, Manifest.permission.USE_SIP) ==
+                PackageManager.PERMISSION_GRANTED) {
+            setWizardId();
+            startSipService();
+            long accountId = 1;
+            account = SipProfile.getProfileFromDbId(this, accountId, DBProvider.ACCOUNT_FULL_PROJECTION);
+            saveAccount(wizardId);
+            bindService(new Intent(this, SipService.class), connection, Context.BIND_AUTO_CREATE);
+
+        } else {
+            ActivityCompat.requestPermissions(ChatMainActivity.this, new String[] { Manifest.permission.USE_SIP },
+                            101);
+        }
+
 
         View header = navigationView.getHeaderView(0);
 
@@ -289,8 +302,6 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
         String[] tmp = mSession.getMyUserId().split("@");
         tmp = tmp[1].split(":");
         txtPhoneNo.setText(tmp[0]);
-
-
         GetBalance();
         txtbalance.setOnClickListener(this);
         setMenuClick();
@@ -333,7 +344,28 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
             }
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,@NonNull String[] permissions,@NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode,permissions,grantResults);
 
+        if (requestCode == 101) {
+
+            // Checking whether user granted the permission or not.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setWizardId();
+                startSipService();
+                long accountId = 1;
+                account = SipProfile.getProfileFromDbId(this, accountId, DBProvider.ACCOUNT_FULL_PROJECTION);
+                saveAccount(wizardId);
+                bindService(new Intent(this, SipService.class), connection, Context.BIND_AUTO_CREATE);
+            }
+            else {
+                Toast.makeText(ChatMainActivity.this,"Permission Denied, SIP Calls won't work",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     private void showDialer() {
         IMXCall call = CallsManager.getSharedInstance().getActiveCall();
         if (null != call) {
@@ -587,9 +619,14 @@ public class ChatMainActivity extends VectorAppCompatActivity implements View.On
                 SipConfigManager.setPreferenceStringValue (ChatMainActivity.this,SipConfigManager.STUN_SERVER ,"stun.l.google.com:19302");
                 //SipConfigManager.setPreferenceBooleanValue(ChatMainActivity.this,SipConfigManager.AUTO_CONNECT_BLUETOOTH,true);
                 Intent serviceIntent = new Intent(ChatMainActivity.this, SipService.class);
-                serviceIntent.putExtra(SipManager.EXTRA_OUTGOING_ACTIVITY, new ComponentName(ChatMainActivity.this, ChatMainActivity.class));
+                //serviceIntent.putExtra(SipManager.EXTRA_OUTGOING_ACTIVITY, new ComponentName(ChatMainActivity.this, ChatMainActivity.class));
                 try {
-                    startService(serviceIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(serviceIntent);
+                    }else{
+                        startService(serviceIntent);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
