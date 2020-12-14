@@ -31,7 +31,7 @@ public class Settings {
 
     public static String SIPServer = "";
     public static String SIPDomain = "";
-    public static final int SIPPort = 6580;
+    public static int SIPPort = 6580;
     public static final String CHECK_DEVICE_API = "http://192.95.33.62/vibgyor_okay/billing_auto_register/check_device.php";
     public static final String UPDATE_DEVICE_API = "http://192.95.33.62/vibgyor_okay/billing_auto_register/update_device.php";
     public static final String TRACK_GET_DEVICELIST_API = "https://billing.adoreinfotech.co.in/crm/videos_im/billing_auto_register/get_device_list.php";

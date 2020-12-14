@@ -63,9 +63,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
 import org.matrix.androidsdk.MXSession;
 import org.matrix.androidsdk.core.Log;
 import org.matrix.androidsdk.core.callback.ApiCallback;
@@ -215,40 +223,86 @@ public class SplashActivity extends AppCompatActivity {
         VectorApp.getInstance().getAnalytics().trackEvent(event);
 
         if (!hasCorruptedStore()) {
-            // Go to the home page
-            Intent intent = new Intent(this, ChatMainActivity.class);
 
-            Bundle receivedBundle = getIntent().getExtras();
+            //Get SIP Port
 
-            if (null != receivedBundle) {
-                intent.putExtras(receivedBundle);
-            }
-
-            // display a spinner while managing the universal link
-            if (intent.hasExtra(VectorUniversalLinkReceiver.EXTRA_UNIVERSAL_LINK_URI)) {
-                intent.putExtra(VectorHomeActivity.EXTRA_WAITING_VIEW_STATUS, VectorHomeActivity.WAITING_VIEW_START);
-            }
-
-            // launch from a shared files menu
-            if (getIntent().hasExtra(VectorHomeActivity.EXTRA_SHARED_INTENT_PARAMS)) {
-                intent.putExtra(VectorHomeActivity.EXTRA_SHARED_INTENT_PARAMS,
-                        (Intent) getIntent().getParcelableExtra(VectorHomeActivity.EXTRA_SHARED_INTENT_PARAMS));
-                getIntent().removeExtra(VectorHomeActivity.EXTRA_SHARED_INTENT_PARAMS);
-            }
-
-            if (getIntent().hasExtra(EXTRA_ROOM_ID) && getIntent().hasExtra(EXTRA_MATRIX_ID)) {
-                Map<String, Object> params = new HashMap<>();
-
-                params.put(VectorRoomActivity.EXTRA_MATRIX_ID, getIntent().getStringExtra(EXTRA_MATRIX_ID));
-                params.put(VectorRoomActivity.EXTRA_ROOM_ID, getIntent().getStringExtra(EXTRA_ROOM_ID));
-                intent.putExtra(VectorHomeActivity.EXTRA_JUMP_TO_ROOM_PARAMS, (HashMap) params);
-            }
-
-            startActivity(intent);
-            finish();
+            String url = String.format("%sextensions/getport.php?key=%s",
+                    getResources().getString(R.string.FusionPBX_API_Url), getResources().getString(R.string.FusionPBX_API_Key));
+            RequestQueue queue = Volley.newRequestQueue(this);
+            StringRequest sr = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        Settings.SIPPort=jsonObject.getInt("SipPort");
+                        SplashActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                GotoHome();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        SplashActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(SplashActivity.this, "Error obtaining SIP Port", Toast.LENGTH_LONG).show();
+                                GotoHome();
+                            }
+                        });
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    final VolleyError error1 = volleyError;
+                    SplashActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(SplashActivity.this, error1.getMessage(), Toast.LENGTH_LONG).show();
+                            GotoHome();
+                        }
+                    });
+                }
+            });
+            queue.add(sr);
         } else {
             CommonActivityUtils.logout(this);
         }
+    }
+
+    private void GotoHome(){
+        // Go to the home page
+        Intent intent = new Intent(this, ChatMainActivity.class);
+
+        Bundle receivedBundle = getIntent().getExtras();
+
+        if (null != receivedBundle) {
+            intent.putExtras(receivedBundle);
+        }
+
+        // display a spinner while managing the universal link
+        if (intent.hasExtra(VectorUniversalLinkReceiver.EXTRA_UNIVERSAL_LINK_URI)) {
+            intent.putExtra(VectorHomeActivity.EXTRA_WAITING_VIEW_STATUS, VectorHomeActivity.WAITING_VIEW_START);
+        }
+
+        // launch from a shared files menu
+        if (getIntent().hasExtra(VectorHomeActivity.EXTRA_SHARED_INTENT_PARAMS)) {
+            intent.putExtra(VectorHomeActivity.EXTRA_SHARED_INTENT_PARAMS,
+                    (Intent) getIntent().getParcelableExtra(VectorHomeActivity.EXTRA_SHARED_INTENT_PARAMS));
+            getIntent().removeExtra(VectorHomeActivity.EXTRA_SHARED_INTENT_PARAMS);
+        }
+
+        if (getIntent().hasExtra(EXTRA_ROOM_ID) && getIntent().hasExtra(EXTRA_MATRIX_ID)) {
+            Map<String, Object> params = new HashMap<>();
+
+            params.put(VectorRoomActivity.EXTRA_MATRIX_ID, getIntent().getStringExtra(EXTRA_MATRIX_ID));
+            params.put(VectorRoomActivity.EXTRA_ROOM_ID, getIntent().getStringExtra(EXTRA_ROOM_ID));
+            intent.putExtra(VectorHomeActivity.EXTRA_JUMP_TO_ROOM_PARAMS, (HashMap) params);
+        }
+
+        startActivity(intent);
+        finish();
     }
 
     private void checkLazyLoadingStatus(final List<MXSession> sessions) {
@@ -483,12 +537,15 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        showNotification();
-        if (Matrix.getInstance(this).getDefaultSession() == null) {
-            NoitficationUtils.cancelNotification(this);
-            NoitficationUtils.cancelNotification(this);
-            NoitficationUtils.cancelNotification(this);
+        try {
+            showNotification();
+            if (Matrix.getInstance(this).getDefaultSession() == null) {
+                NoitficationUtils.cancelNotification(this);
+                NoitficationUtils.cancelNotification(this);
+                NoitficationUtils.cancelNotification(this);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
