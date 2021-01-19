@@ -43,4 +43,10 @@
 
     <style name="AppTheme.Light.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="TextAttachmentOptions">
+        <item name="android:fontFamily">sans-serif-condensed</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

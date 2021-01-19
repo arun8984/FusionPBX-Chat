@@ -70,4 +70,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="slide_to_cancel">"Slide to cancel"</string>
+    <string name="type_a_message">Type a message</string>
+    <bool name="is_right_to_left">false</bool>
 </resources>
