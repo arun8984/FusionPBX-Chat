@@ -47,6 +47,7 @@ import im.vector.view.VectorAutoCompleteTextView;
 public class AudioRecordView {
 
     private static final int PERMISSIONS_REQUEST_MICROPHONE = 200;
+    private static final int PERMISSIONS_REQUEST_STORAGE = 201;
 
     public enum UserBehaviour {
         CANCELING,
@@ -530,8 +531,15 @@ public class AudioRecordView {
                         firstY = motionEvent.getRawY();
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                        mActivity.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_MICROPHONE);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                        if(ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                            mActivity.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, PERMISSIONS_REQUEST_MICROPHONE);
+                        }else {
+                            if(ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                                mActivity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSIONS_REQUEST_STORAGE);
+                        }else {
+                                startRecord();
+                            }
                     } else {
                         startRecord();
                     }

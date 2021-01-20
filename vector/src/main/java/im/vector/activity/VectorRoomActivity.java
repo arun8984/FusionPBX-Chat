@@ -171,7 +171,7 @@ public class VectorRoomActivity extends MXCActionBarActivity implements
     private int currentFormat = 0;
     private int output_formats[] = { MediaRecorder.OutputFormat.MPEG_4, MediaRecorder.OutputFormat.THREE_GPP };
     private String file_exts[] = { AUDIO_RECORDER_FILE_EXT_MP4, AUDIO_RECORDER_FILE_EXT_3GP };
-    private String currentAudioFile = "";
+    private File currentAudioFile = null;
 
 
     // the session
@@ -4239,26 +4239,38 @@ public class VectorRoomActivity extends MXCActionBarActivity implements
         }
     }
 
-    private String getFilename(){
-        String filepath = Environment.getExternalStorageDirectory().getPath();
-        File file = new File(filepath,getString(R.string.riot_app_name)+"/"+AUDIO_RECORDER_FOLDER);
-
+    private void getFilename(){
+        String filepath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        File file = new File(filepath,getString(R.string.riot_app_name) + "/" + AUDIO_RECORDER_FOLDER);
+        try {
+            file.mkdirs();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        /*
         if(!file.exists()){
             file.mkdirs();
         }
-
-        return (file.getAbsolutePath() + "/AUD-"+
+         */
+        currentAudioFile = new File(file, "AUD-"+
                 android.text.format.DateFormat.format("yyyyMMdd", new java.util.Date()).toString() +
                 "-" + System.currentTimeMillis() + file_exts[currentFormat]);
+
+/*        return (file.getAbsolutePath() + "/AUD-"+
+                android.text.format.DateFormat.format("yyyyMMdd", new java.util.Date()).toString() +
+                "-" + System.currentTimeMillis() + file_exts[currentFormat]);
+
+ */
     }
 
     private void startRecording(){
-        currentAudioFile = getFilename();
+        //currentAudioFile = getFilename();
+        getFilename();
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(output_formats[currentFormat]);
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        recorder.setOutputFile(currentAudioFile);
+        recorder.setOutputFile(currentAudioFile.getPath());
         recorder.setOnErrorListener(errorListener);
         recorder.setOnInfoListener(infoListener);
 
@@ -4295,22 +4307,24 @@ public class VectorRoomActivity extends MXCActionBarActivity implements
         }
     }
     private void deleteRecording(){
-        if (!currentAudioFile.isEmpty()) {
-            File file = new File(currentAudioFile);
+        if (null != currentAudioFile) {
+            /*File file = new File(currentAudioFile);
             if (file.exists()) {
                 file.delete();
             }
+             */
+            currentAudioFile.delete();
         }
-        currentAudioFile = "";
+        currentAudioFile = null;
     }
     private void sendAudio(){
         List<RoomMediaMessage> sharedDataItems = new ArrayList<>();
-        if (!currentAudioFile.isEmpty()) {
+        if (null != currentAudioFile) {
             if (0 == sharedDataItems.size()) {
-                sharedDataItems.add(new RoomMediaMessage(Uri.fromFile(new File(currentAudioFile))));
+                sharedDataItems.add(new RoomMediaMessage(Uri.fromFile(currentAudioFile)));
             }
         }
         mVectorRoomMediasSender.sendMedias(sharedDataItems);
-        currentAudioFile = "";
+        currentAudioFile = null;
     }
 }
